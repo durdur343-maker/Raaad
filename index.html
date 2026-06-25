@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المخازن</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            padding: 16px 18px 22px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        }
+        h1 {
+            text-align: center;
+            color: #0f172a;
+            font-weight: 650;
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        .subhead {
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 16px;
+            border-bottom: 2px dashed #e9edf2;
+            padding-bottom: 10px;
+        }
+        .status-badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 12px;
+            border-radius: 40px;
+            margin-right: 6px;
+        }
+        .status-badge.online { background: #10b981; color: white; }
+        .status-badge.offline { background: #ef4444; color: white; }
+        .status-badge.connecting { background: #f59e0b; color: white; }
+
+        .sheet-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+        .sheet-selector label {
+            font-weight: 500;
+            font-size: 13px;
+            color: #1e293b;
+        }
+        .sheet-selector select {
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #d1d9e6;
+            font-size: 12px;
+            height: 32px;
+            background: white;
+            outline: none;
+            min-width: 120px;
+        }
+        .sheet-selector select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.10);
+        }
+        .sheet-selector .sheet-info {
+            font-size: 11px;
+            color: #64748b;
+            margin-right: auto;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .action-buttons .btn {
+            min-width: 120px;
+            height: 40px;
+            font-size: 14px;
+        }
+        .btn-management { background: #8b5cf6; color: white; border-color: #8b5cf6; }
+        .btn-management:hover:not(:disabled) { background: #7c3aed; }
+        .btn-search { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .btn-search:hover:not(:disabled) { background: #2563eb; }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px 4px;
+            margin-bottom: 8px;
+        }
+        .input-group label {
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 12px;
+            min-width: 38px;
+        }
+        .input-group input {
+            flex: 1 1 90px;
+            padding: 3px 10px;
+            border: 1px solid #d1d9e6;
+            border-radius: 30px;
+            font-size: 12px;
+            background: white;
+            outline: none;
+            transition: 0.2s;
+            height: 32px;
+            line-height: 1.2;
+        }
+        .input-group input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.10); }
+        .input-group.search-input input { height: 32px; padding: 3px 12px; }
+
+        .btn {
+            border: none;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+            height: 32px;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .btn-primary:hover:not(:disabled) { background: #2563eb; }
+        .btn-success { background: #10b981; color: white; border-color: #10b981; }
+        .btn-success:hover:not(:disabled) { background: #059669; }
+        .btn-danger { background: #ef4444; color: white; border-color: #ef4444; }
+        .btn-danger:hover:not(:disabled) { background: #dc2626; }
+        .btn-warning { background: #f59e0b; color: white; border-color: #f59e0b; }
+        .btn-warning:hover:not(:disabled) { background: #d97706; }
+        .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #1e293b; }
+        .btn-outline:hover:not(:disabled) { background: #f1f5f9; }
+        .btn-sm { padding: 2px 10px; font-size: 11px; height: 28px; }
+        .btn-lg { height: 40px; padding: 6px 24px; font-size: 14px; }
+
+        .table-wrap {
+            overflow-x: auto;
+            margin-top: 10px;
+            border-radius: 14px;
+            border: 1px solid #e9edf2;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; background: white; }
+        th { background: #f8fafc; color: #1e293b; font-weight: 600; padding: 8px 6px; text-align: center; border-bottom: 2px solid #e2e8f0; font-size: 11px; }
+        td { padding: 8px 6px; text-align: center; border-bottom: 1px solid #edf2f7; font-size: 12px; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f8fafc; }
+        .empty-row td { color: #94a3b8; padding: 16px 10px; font-style: italic; }
+        
+        .badge { 
+            padding: 2px 12px; 
+            border-radius: 40px; 
+            font-weight: 600; 
+            font-size: 12px; 
+            display: inline-block;
+            min-width: 40px;
+        }
+        .badge-red { background: #fee2e2; color: #dc2626; }
+        .badge-yellow { background: #fef3c7; color: #d97706; }
+        .badge-green { background: #d1fae5; color: #059669; }
+        .badge-blue { background: #dbeafe; color: #2563eb; }
+        
+        .action-cell { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+
+        .loading { text-align: center; padding: 30px; color: #64748b; }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .toast {
+            background: #0f172a;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 13px;
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            white-space: nowrap;
+            max-width: 90%;
+        }
+        .toast.show { opacity: 1; bottom: 30px; }
+        .toast.error { background: #dc2626; }
+        .toast.success { background: #059669; }
+
+        .footer-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            border-top: 1px solid #e9edf2;
+            padding-top: 14px;
+        }
+        .footer-actions .left-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #475569;
+        }
+        .stat-box span strong {
+            color: #0f172a;
+        }
+
+        .multi-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 10px 0;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+        .multi-fields .field-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .multi-fields .field-item label {
+            font-size: 11px;
+            color: #475569;
+            min-width: 20px;
+        }
+        .multi-fields .field-item input {
+            flex: 1;
+            padding: 4px 8px;
+            border: 1px solid #d1d9e6;
+            border-radius: 20px;
+            font-size: 11px;
+            height: 28px;
+            outline: none;
+        }
+        .multi-fields .field-item input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.10);
+        }
+        .multi-fields .field-item input[type="text"] {
+            width: 100%;
+        }
+        .multi-fields .field-item .qty-input {
+            width: 70px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid #e9edf2;
+        }
+
+        .password-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .password-overlay.active {
+            display: flex;
+        }
+        .password-box {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .password-box h3 {
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
+        .password-box p {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+        .password-box input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #d1d9e6;
+            border-radius: 12px;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 15px;
+            direction: ltr;
+        }
+        .password-box input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.10);
+        }
+        .password-box .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .password-box .btn-group .btn {
+            min-width: 100px;
+            height: 40px;
+            font-size: 14px;
+        }
+        .password-error {
+            color: #dc2626;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .management-panel {
+            display: none;
+            margin-top: 10px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 2px solid #8b5cf6;
+        }
+        .management-panel.active {
+            display: block;
+        }
+        .management-panel .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .management-panel .panel-header h3 {
+            color: #0f172a;
+            font-size: 16px;
+        }
+        .management-panel .panel-header .close-panel {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: 0.2s;
+        }
+        .management-panel .panel-header .close-panel:hover {
+            color: #ef4444;
+        }
+        .management-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .management-tabs .btn {
+            flex: 1;
+        }
+        .management-tabs .btn.active {
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 12px; }
+            .input-group { flex-direction: column; align-items: stretch; }
+            .input-group label { min-width: unset; }
+            .btn { width: 100%; justify-content: center; height: 34px; }
+            .toast { white-space: normal; max-width: 90%; }
+            .sheet-selector { flex-direction: column; align-items: stretch; }
+            .sheet-selector .sheet-info { margin-right: 0; }
+            .footer-actions { flex-direction: column; align-items: stretch; }
+            .footer-actions .left-actions { flex-direction: column; }
+            .multi-fields {
+                grid-template-columns: 1fr;
+            }
+            .multi-fields .field-item .qty-input {
+                width: 100%;
+            }
+            .password-box { padding: 20px; margin: 10px; }
+            .action-buttons .btn {
+                min-width: 80px;
+                font-size: 12px;
+                height: 34px;
+            }
+            .management-tabs .btn {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <h1>📦 نظام المخازن</h1>
+    <div class="subhead">
+        🔗 Google Sheets
+        <span class="status-badge" :class="statusClass">
+            {{ statusText }}
+        </span>
+    </div>
+
+    <div class="sheet-selector">
+        <label>📂 الورقة:</label>
+        <select v-model="selectedSheet" @change="loadItems">
+            <option value="all">🌐 جميع الأوراق</option>
+            <option value="Sheet1">📋 Sheet1</option>
+            <option value="Sheet2">📋 Sheet2</option>
+            <option value="Sheet3">📋 Sheet3</option>
+            <option value="Sheet4">📋 Sheet4</option>
+        </select>
+        <span class="sheet-info" v-if="selectedSheet !== 'all'">
+            عرض بيانات: <strong>{{ selectedSheet }}</strong>
+        </span>
+        <span class="sheet-info" v-else>
+            عرض: <strong>جميع الأوراق</strong>
+        </span>
+        <button class="btn btn-outline btn-sm" @click="loadItems" :disabled="loading">🔄 تحديث</button>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn btn-search" @click="showSearch">🔍 بحث</button>
+        <button class="btn btn-management" @click="showManagement">⚙️ إدارة</button>
+    </div>
+
+    <div v-if="loading" class="loading">
+        <div class="spinner"></div>
+        جاري تحميل البيانات...
+    </div>
+
+    <template v-else>
+        <div id="searchSection">
+            <div class="input-group search-input">
+                <label>🔎</label>
+                <input type="text" placeholder="اكتب اسم المادة..." v-model="searchTerm" @keyup.enter="searchItems">
+                <button class="btn btn-primary" @click="searchItems">بحث</button>
+                <button class="btn btn-outline" @click="clearSearch">إلغاء</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>اسم المادة</th>
+                            <th>العدد</th>
+                            <th v-if="selectedSheet === 'all'">الورقة</th>
+                            <th>إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="filteredItems.length === 0">
+                            <td :colspan="selectedSheet === 'all' ? 5 : 4" class="empty-row">لا توجد مواد</td>
+                        </tr>
+                        <tr v-for="(item, index) in filteredItems" :key="item.id + '_' + item.sheet">
+                            <td>{{ index + 1 }}</td>
+                            <td><strong>{{ item.name }}</strong></td>
+                            <td>
+                                <span class="badge" :class="getQuantityClass(item.quantity)">
+                                    {{ Number(item.quantity).toFixed(2) }}
+                                </span>
+                            </td>
+                            <td v-if="selectedSheet === 'all'">
+                                <span style="font-size:10px; background:#e9edf2; padding:2px 8px; border-radius:12px;">{{ item.sheet || 'غير محدد' }}</span>
+                            </td>
+                            <td class="action-cell">
+                                <button class="btn btn-outline btn-sm" @click="editItem(item)">✏️ تعديل</button>
+                                <button class="btn btn-danger btn-sm" @click="deleteItem(item)">🗑️ حذف</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="stat-box" style="margin-top: 10px;">
+                <span>المواد: <strong>{{ filteredItems.length }}</strong></span>
+                <span>الوحدات: <strong>{{ totalUnits.toFixed(2) }}</strong></span>
+                <span v-if="selectedSheet !== 'all'">الورقة: <strong>{{ selectedSheet }}</strong></span>
+            </div>
+        </div>
+
+        <div class="management-panel" id="managementPanel">
+            <div class="panel-header">
+                <h3>⚙️ لوحة الإدارة</h3>
+                <button class="close-panel" @click="closeManagement">✕</button>
+            </div>
+            
+            <div class="management-tabs">
+                <button class="btn btn-success" @click="managementTab = 'add'" :class="{'active': managementTab === 'add'}">➕ إضافة</button>
+                <button class="btn btn-danger" @click="managementTab = 'withdraw'" :class="{'active': managementTab === 'withdraw'}">➖ سحب</button>
+            </div>
+
+            <div v-if="managementTab === 'add'">
+                <div style="font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 8px;">
+                    ➕ إضافة 10 مواد دفعة واحدة
+                </div>
+                <div class="multi-fields">
+                    <div v-for="i in 10" :key="'add_' + i" class="field-item">
+                        <label>{{ i }}.</label>
+                        <input type="text" :placeholder="'مادة ' + i" v-model="addItems[i-1].name">
+                        <input type="text" class="qty-input" placeholder="0.00" v-model="addItems[i-1].quantity" 
+                               @input="validateDecimal($event, 'add', i-1)">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
+                    <button class="btn btn-success btn-lg" @click="addMultipleItems" :disabled="saving">
+                        {{ saving ? 'جاري الإضافة...' : '➕ إضافة الكل' }}
+                    </button>
+                    <button class="btn btn-outline" @click="clearAddFields">🗑️ مسح الكل</button>
+                </div>
+            </div>
+
+            <div v-if="managementTab === 'withdraw'">
+                <div style="font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 8px;">
+                    ➖ سحب 10 مواد دفعة واحدة
+                </div>
+                <div class="multi-fields">
+                    <div v-for="i in 10" :key="'withdraw_' + i" class="field-item">
+                        <label>{{ i }}.</label>
+                        <input type="text" :placeholder="'مادة ' + i" v-model="withdrawItems[i-1].name">
+                        <input type="text" class="qty-input" placeholder="0.00" v-model="withdrawItems[i-1].quantity"
+                               @input="validateDecimal($event, 'withdraw', i-1)">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
+                    <button class="btn btn-danger btn-lg" @click="withdrawMultipleItems" :disabled="saving">
+                        {{ saving ? 'جاري السحب...' : '➖ سحب الكل' }}
+                    </button>
+                    <button class="btn btn-outline" @click="clearWithdrawFields">🗑️ مسح الكل</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-actions">
+            <div class="left-actions">
+                <button class="btn btn-outline" @click="refreshData" :disabled="loading">🔄 تحديث</button>
+            </div>
+            <div style="font-size: 11px; color: #94a3b8;">
+                آخر تحديث: {{ lastUpdate }}
+            </div>
+        </div>
+
+        <div class="footer-text">
+             تصميم دريد العيثاوي
+        </div>
+    </template>
+</div>
+
+<div class="password-overlay" id="passwordOverlay">
+    <div class="password-box">
+        <h3>🔐 تأكيد الأمان</h3>
+        <p>يرجى إدخال كلمة المرور للمتابعة</p>
+        <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور">
+        <div class="btn-group">
+            <button class="btn btn-success" id="confirmPasswordBtn">✅ تأكيد</button>
+            <button class="btn btn-outline" id="cancelPasswordBtn">❌ إلغاء</button>
+        </div>
+        <div class="password-error" id="passwordError">
+            ❌ كلمة المرور غير صحيحة
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script>
+new Vue({
+    el: '#app',
+    data: {
+        items: [],
+        searchTerm: '',
+        loading: true,
+        saving: false,
+        apiStatus: 'connecting',
+        selectedSheet: 'all',
+        lastUpdate: '--',
+        
+        addItems: Array.from({length: 10}, () => ({ name: '', quantity: '0' })),
+        withdrawItems: Array.from({length: 10}, () => ({ name: '', quantity: '0' })),
+        
+        adminPassword: 'admin',
+        managementPanelOpen: false,
+        managementTab: 'add',
+        
+        // متغير لتخزين العملية المعلقة
+        pendingAction: null,
+        pendingData: null,
+        
+        apiUrl: 'https://script.google.com/macros/s/AKfycbzC6wJkaqcx2oBZKAi9j8QQKh6b4L8YkyZOMpuPrIhXC-rgf7kEr2CYX7q97CNTrjlu/exec'
+    },
+    computed: {
+        statusText() {
+            return {
+                online: '🟢 متصل',
+                offline: '🔴 غير متصل',
+                connecting: '🟡 جاري الاتصال...'
+            }[this.apiStatus] || '🔄 جاري...';
+        },
+        statusClass() {
+            return {
+                online: 'online',
+                offline: 'offline',
+                connecting: 'connecting'
+            }[this.apiStatus] || 'connecting';
+        },
+        filteredItems() {
+            if (!this.searchTerm.trim()) return this.items;
+            const term = this.searchTerm.trim().toLowerCase();
+            return this.items.filter(item => item.name.toLowerCase().includes(term));
+        },
+        totalUnits() {
+            return this.filteredItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
+        }
+    },
+    methods: {
+        // ============================================================
+        // 🎨 تلوين الأعداد
+        // ============================================================
+        getQuantityClass(quantity) {
+            const qty = Number(quantity) || 0;
+            if (qty <= 75) return 'badge-red';
+            if (qty <= 150) return 'badge-yellow';
+            if (qty <= 200) return 'badge-green';
+            return 'badge-blue';
+        },
+        
+        // ============================================================
+        // 🔢 التحقق من الأرقام العشرية
+        // ============================================================
+        validateDecimal(event, type, index) {
+            let value = event.target.value;
+            value = value.replace(/[^0-9.]/g, '');
+            const parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            event.target.value = value;
+            
+            if (type === 'add') {
+                this.addItems[index].quantity = value || '0';
+            } else {
+                this.withdrawItems[index].quantity = value || '0';
+            }
+        },
+        
+        // ============================================================
+        // 🔍 زر البحث
+        // ============================================================
+        showSearch() {
+            if (this.managementPanelOpen) {
+                this.closeManagement();
+            }
+            document.getElementById('searchSection').scrollIntoView({ behavior: 'smooth' });
+        },
+        
+        // ============================================================
+        // ⚙️ زر الإدارة
+        // ============================================================
+        showManagement() {
+            const overlay = document.getElementById('passwordOverlay');
+            overlay.classList.add('active');
+            
+            const input = document.getElementById('passwordInput');
+            input.value = '';
+            input.focus();
+            
+            document.getElementById('passwordError').style.display = 'none';
+        },
+        
+        // ============================================================
+        // 🔐 نافذة كلمة المرور الموحدة
+        // ============================================================
+        showPasswordPrompt(action, data) {
+            this.pendingAction = action;
+            this.pendingData = data;
+            
+            const overlay = document.getElementById('passwordOverlay');
+            overlay.classList.add('active');
+            
+            const input = document.getElementById('passwordInput');
+            input.value = '';
+            input.focus();
+            
+            document.getElementById('passwordError').style.display = 'none';
+        },
+        
+        confirmPassword() {
+            const input = document.getElementById('passwordInput');
+            const password = input.value;
+            
+            if (password === this.adminPassword) {
+                document.getElementById('passwordOverlay').classList.remove('active');
+                
+                // تنفيذ العملية المعلقة
+                if (this.pendingAction === 'edit') {
+                    this.executeEditItem(this.pendingData);
+                } else if (this.pendingAction === 'delete') {
+                    this.executeDeleteItem(this.pendingData);
+                } else if (this.pendingAction === 'openManagement') {
+                    this.openManagementPanel();
+                }
+                
+                this.pendingAction = null;
+                this.pendingData = null;
+            } else {
+                document.getElementById('passwordError').style.display = 'block';
+                input.value = '';
+                input.focus();
+            }
+        },
+        
+        cancelPassword() {
+            document.getElementById('passwordOverlay').classList.remove('active');
+            this.pendingAction = null;
+            this.pendingData = null;
+            this.showToast('❌ تم إلغاء العملية', 'error');
+        },
+        
+        openManagementPanel() {
+            this.managementPanelOpen = true;
+            this.managementTab = 'add';
+            document.getElementById('managementPanel').classList.add('active');
+            
+            setTimeout(() => {
+                document.getElementById('managementPanel').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+            
+            this.showToast('✅ تم فتح لوحة الإدارة', 'success');
+        },
+        
+        closeManagement() {
+            this.managementPanelOpen = false;
+            document.getElementById('managementPanel').classList.remove('active');
+        },
+        
+        // ============================================================
+        // ✏️ تعديل مادة (مع كلمة المرور)
+        // ============================================================
+        editItem(item) {
+            this.showPasswordPrompt('edit', item);
+        },
+        
+        async executeEditItem(item) {
+            const newName = prompt('✏️ تعديل اسم المادة:', item.name)?.trim() || item.name;
+            const newQtyInput = prompt('✏️ تعديل العدد:', item.quantity);
+            if (newQtyInput === null) return;
+            const newQty = parseFloat(newQtyInput);
+            if (isNaN(newQty) || newQty < 0) {
+                this.showToast('⚠️ العدد غير صحيح', 'error');
+                return;
+            }
+            
+            this.saving = true;
+            try {
+                const data = await this._sendRequest('updateItem', { 
+                    id: item.id, 
+                    name: newName, 
+                    quantity: newQty
+                });
+                
+                if (data && data.success) {
+                    this.showToast('✅ ' + (data.message || 'تم التعديل بنجاح'), 'success');
+                    await this.loadItems();
+                } else {
+                    this.showToast('❌ ' + (data?.error || 'فشل التعديل'), 'error');
+                }
+            } catch (error) {
+                this.showToast('❌ خطأ: ' + error.message, 'error');
+            } finally {
+                this.saving = false;
+            }
+        },
+        
+        // ============================================================
+        // 🗑️ حذف مادة (مع كلمة المرور)
+        // ============================================================
+        deleteItem(item) {
+            if (!confirm('⚠️ هل أنت متأكد من حذف "' + item.name + '"؟')) return;
+            this.showPasswordPrompt('delete', item);
+        },
+        
+        async executeDeleteItem(item) {
+            this.saving = true;
+            try {
+                const data = await this._sendRequest('deleteItem', { 
+                    id: item.id
+                });
+                
+                if (data && data.success) {
+                    this.showToast('✅ ' + (data.message || 'تم الحذف بنجاح'), 'success');
+                    await this.loadItems();
+                } else {
+                    this.showToast('❌ ' + (data?.error || 'فشل الحذف'), 'error');
+                }
+            } catch (error) {
+                this.showToast('❌ خطأ: ' + error.message, 'error');
+            } finally {
+                this.saving = false;
+            }
+        },
+        
+        // ============================================================
+        // 📥 تحميل البيانات
+        // ============================================================
+        async loadItems() {
+            this.loading = true;
+            this.apiStatus = 'connecting';
+            
+            try {
+                let url = this.apiUrl + '?action=getItems';
+                if (this.selectedSheet && this.selectedSheet !== 'all') {
+                    url += '&sheet=' + encodeURIComponent(this.selectedSheet);
+                }
+                
+                console.log('📡 جاري الاتصال بـ:', url);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                console.log('📦 البيانات المستلمة:', data);
+                
+                if (data && data.success && data.items && Array.isArray(data.items)) {
+                    this.items = data.items;
+                    this.apiStatus = 'online';
+                    this.lastUpdate = new Date().toLocaleTimeString('ar-EG');
+                    this.showToast('✅ تم تحميل ' + this.items.length + ' مادة', 'success');
+                    this._saveToLocal();
+                } else {
+                    this.apiStatus = 'offline';
+                    this.showToast('❌ فشل تحميل البيانات', 'error');
+                    this._loadFromLocal();
+                }
+            } catch (error) {
+                console.error('❌ خطأ في التحميل:', error);
+                this.apiStatus = 'offline';
+                this.showToast('❌ فشل الاتصال بقاعدة البيانات', 'error');
+                this._loadFromLocal();
+            } finally {
+                this.loading = false;
+            }
+        },
+        
+        refreshData() {
+            this.loadItems();
+        },
+        
+        // ============================================================
+        // 📨 إرسال طلب
+        // ============================================================
+        async _sendRequest(action, params = {}) {
+            try {
+                let url = this.apiUrl + '?action=' + encodeURIComponent(action);
+                
+                for (const key in params) {
+                    if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+                        url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+                    }
+                }
+                
+                if (this.selectedSheet && this.selectedSheet !== 'all') {
+                    url += '&sheet=' + encodeURIComponent(this.selectedSheet);
+                }
+                
+                console.log('📤 إرسال طلب:', url);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                console.log('📥 استجابة:', data);
+                return data;
+            } catch (error) {
+                console.error('❌ خطأ في الطلب:', error);
+                throw error;
+            }
+        },
+        
+        // ============================================================
+        // ➕ إضافة مواد متعددة
+        // ============================================================
+        async addMultipleItems() {
+            const itemsToAdd = this.addItems
+                .filter(item => item.name && item.name.trim())
+                .map(item => {
+                    const qty = parseFloat(String(item.quantity).replace(/[^0-9.]/g, ''));
+                    return { 
+                        name: item.name.trim(), 
+                        quantity: isNaN(qty) ? 0 : qty
+                    };
+                })
+                .filter(item => item.quantity > 0);
+            
+            if (itemsToAdd.length === 0) {
+                this.showToast('⚠️ يرجى إدخال مادة واحدة على الأقل بكمية صحيحة', 'error');
+                return;
+            }
+            
+            // طلب كلمة المرور للإضافة
+            this.showPasswordPrompt('add', itemsToAdd);
+        },
+        
+        async executeAddMultipleItems(itemsToAdd) {
+            this.saving = true;
+            let successCount = 0;
+            let errorCount = 0;
+            let errors = [];
+            
+            for (const item of itemsToAdd) {
+                try {
+                    const data = await this._sendRequest('addItem', { 
+                        name: item.name, 
+                        quantity: item.quantity
+                    });
+                    
+                    if (data && data.success) {
+                        successCount++;
+                    } else {
+                        errorCount++;
+                        errors.push(item.name + ': ' + (data?.error || 'فشل غير معروف'));
+                    }
+                } catch (error) {
+                    errorCount++;
+                    errors.push(item.name + ': خطأ في الاتصال');
+                }
+            }
+            
+            this.clearAddFields();
+            await this.loadItems();
+            this.saving = false;
+            
+            if (successCount > 0 && errorCount === 0) {
+                this.showToast('✅ تم إضافة ' + successCount + ' مواد بنجاح', 'success');
+            } else if (successCount > 0 && errorCount > 0) {
+                this.showToast('⚠️ تم إضافة ' + successCount + ' مواد، فشل ' + errorCount, 'error');
+                console.error('❌ الأخطاء:', errors.join('\n'));
+            } else {
+                this.showToast('❌ فشل إضافة جميع المواد', 'error');
+                console.error('❌ الأخطاء:', errors.join('\n'));
+            }
+        },
+        
+        // ============================================================
+        // ➖ سحب مواد متعددة
+        // ============================================================
+        async withdrawMultipleItems() {
+            const itemsToWithdraw = this.withdrawItems
+                .filter(item => item.name && item.name.trim())
+                .map(item => {
+                    const qty = parseFloat(String(item.quantity).replace(/[^0-9.]/g, ''));
+                    return { 
+                        name: item.name.trim(), 
+                        quantity: isNaN(qty) ? 0 : qty
+                    };
+                })
+                .filter(item => item.quantity > 0);
+            
+            if (itemsToWithdraw.length === 0) {
+                this.showToast('⚠️ يرجى إدخال مادة واحدة على الأقل بكمية صحيحة', 'error');
+                return;
+            }
+            
+            let insufficientItems = [];
+            for (const item of itemsToWithdraw) {
+                const existing = this.items.find(i => 
+                    i.name.toLowerCase() === item.name.toLowerCase()
+                );
+                const available = existing ? existing.quantity : 0;
+                if (available < item.quantity - 0.001) {
+                    insufficientItems.push({
+                        name: item.name,
+                        available: available,
+                        requested: item.quantity
+                    });
+                }
+            }
+            
+            if (insufficientItems.length > 0) {
+                let msg = '⚠️ لا يمكن سحب المواد التالية:\n';
+                insufficientItems.forEach(item => {
+                    msg += '- ' + item.name + ': المطلوب ' + item.requested.toFixed(2) + '، المتوفر ' + item.available.toFixed(2) + '\n';
+                });
+                this.showToast(msg, 'error');
+                return;
+            }
+            
+            // طلب كلمة المرور للسحب
+            this.showPasswordPrompt('withdraw', itemsToWithdraw);
+        },
+        
+        async executeWithdrawMultipleItems(itemsToWithdraw) {
+            this.saving = true;
+            let successCount = 0;
+            let errorCount = 0;
+            let errors = [];
+            
+            for (const item of itemsToWithdraw) {
+                try {
+                    const data = await this._sendRequest('withdrawItem', { 
+                        name: item.name, 
+                        quantity: item.quantity
+                    });
+                    
+                    if (data && data.success) {
+                        successCount++;
+                    } else {
+                        errorCount++;
+                        errors.push(item.name + ': ' + (data?.error || 'فشل غير معروف'));
+                    }
+                } catch (error) {
+                    errorCount++;
+                    errors.push(item.name + ': خطأ في الاتصال');
+                }
+            }
+            
+            this.clearWithdrawFields();
+            await this.loadItems();
+            this.saving = false;
+            
+            if (successCount > 0 && errorCount === 0) {
+                this.showToast('✅ تم سحب ' + successCount + ' مواد بنجاح', 'success');
+            } else if (successCount > 0 && errorCount > 0) {
+                this.showToast('⚠️ تم سحب ' + successCount + ' مواد، فشل ' + errorCount, 'error');
+                console.error('❌ الأخطاء:', errors.join('\n'));
+            } else {
+                this.showToast('❌ فشل سحب جميع المواد', 'error');
+                console.error('❌ الأخطاء:', errors.join('\n'));
+            }
+        },
+        
+        // ============================================================
+        // 🧹 مسح الحقول
+        // ============================================================
+        clearAddFields() {
+            this.addItems = Array.from({length: 10}, () => ({ name: '', quantity: '0' }));
+        },
+        clearWithdrawFields() {
+            this.withdrawItems = Array.from({length: 10}, () => ({ name: '', quantity: '0' }));
+        },
+        
+        // ============================================================
+        // 🔍 دوال البحث
+        // ============================================================
+        searchItems() {
+            if (this.searchTerm.trim()) {
+                this.showToast('🔍 تم البحث عن: "' + this.searchTerm + '"', 'success');
+            }
+        },
+        clearSearch() {
+            this.searchTerm = '';
+            this.showToast('🧹 تم إلغاء البحث', 'success');
+        },
+        
+        // ============================================================
+        // 💾 نسخ احتياطي
+        // ============================================================
+        _saveToLocal() {
+            try { 
+                localStorage.setItem('inventoryBackup', JSON.stringify(this.items));
+                localStorage.setItem('inventoryLastUpdate', this.lastUpdate);
+            } catch (e) {}
+        },
+        _loadFromLocal() {
+            try {
+                const stored = localStorage.getItem('inventoryBackup');
+                if (stored) {
+                    this.items = JSON.parse(stored);
+                    const lastUpdate = localStorage.getItem('inventoryLastUpdate');
+                    this.lastUpdate = lastUpdate || 'من النسخة الاحتياطية';
+                    this.showToast('📂 تم تحميل البيانات من النسخة الاحتياطية', 'success');
+                }
+            } catch (e) {}
+        },
+        
+        // ============================================================
+        // 💬 إشعارات
+        // ============================================================
+        showToast(msg, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = 'toast';
+            if (type) toast.classList.add(type);
+            toast.classList.add('show');
+            clearTimeout(this.toastTimer);
+            this.toastTimer = setTimeout(() => toast.classList.remove('show'), 5000);
+        }
+    },
+    mounted() {
+        this.loadItems();
+        
+        // ربط أزرار كلمة المرور
+        document.getElementById('confirmPasswordBtn').addEventListener('click', this.confirmPassword.bind(this));
+        document.getElementById('cancelPasswordBtn').addEventListener('click', this.cancelPassword.bind(this));
+        
+        // ربط Enter في حقل كلمة المرور
+        document.getElementById('passwordInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                this.confirmPassword();
+            }
+        });
+        
+        // إغلاق نافذة كلمة المرور عند الضغط خارجها
+        document.getElementById('passwordOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                // إلغاء العملية المعلقة
+                this.pendingAction = null;
+                this.pendingData = null;
+            }
+        });
+    }
+});
+</script>
+</body>
+</html>
