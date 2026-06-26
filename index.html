@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة المخازن</title>
+    <title>نظام إدارة المخازن - Foodie</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -23,13 +23,58 @@
             border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.06);
         }
-        h1 {
-            text-align: center;
-            color: #0f172a;
-            font-weight: 650;
-            font-size: 24px;
-            margin-bottom: 2px;
+        
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
         }
+        .header .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 0;
+            object-fit: contain;
+            border: none;
+            box-shadow: none;
+            background: transparent;
+        }
+        .header .logo-placeholder {
+            width: 100px;
+            height: 100px;
+            border-radius: 0;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #94a3b8;
+        }
+        .header .title-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header .title-group h1 {
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 28px;
+            line-height: 1.2;
+        }
+        .header .title-group h1 .foodie {
+            color: #ef4444;
+            font-style: italic;
+            font-weight: 800;
+            font-size: 30px;
+        }
+        .header .title-group .sub-title {
+            color: #94a3b8;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
         .subhead {
             text-align: center;
             color: #64748b;
@@ -192,6 +237,8 @@
         .btn-outline:hover:not(:disabled) { background: #f1f5f9; }
         .btn-sm { padding: 2px 10px; font-size: 11px; height: 28px; }
         .btn-lg { height: 40px; padding: 6px 24px; font-size: 14px; }
+        .btn-warning { background: #f59e0b; color: white; border-color: #f59e0b; }
+        .btn-warning:hover:not(:disabled) { background: #d97706; }
 
         .table-wrap {
             overflow-x: auto;
@@ -295,6 +342,7 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            position: relative;
         }
         .multi-fields .field-item label {
             font-size: 11px;
@@ -302,7 +350,7 @@
             min-width: 20px;
             font-weight: 600;
         }
-        .multi-fields .field-item input {
+        .multi-fields .field-item input[type="text"] {
             flex: 1;
             padding: 4px 8px;
             border: 1px solid #d1d9e6;
@@ -311,17 +359,92 @@
             height: 28px;
             outline: none;
         }
-        .multi-fields .field-item input:focus {
+        .multi-fields .field-item input[type="text"]:focus {
             border-color: #3b82f6;
             box-shadow: 0 0 0 2px rgba(59,130,246,0.10);
-        }
-        .multi-fields .field-item input[type="text"] {
-            width: 100%;
         }
         .multi-fields .field-item .qty-input {
             width: 70px;
             min-width: 60px;
             text-align: center;
+            padding: 4px 8px;
+            border: 1px solid #d1d9e6;
+            border-radius: 20px;
+            font-size: 11px;
+            height: 28px;
+            outline: none;
+        }
+        .multi-fields .field-item .qty-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.10);
+        }
+        .multi-fields .field-item .qty-input::placeholder {
+            color: #94a3b8;
+            font-size: 10px;
+        }
+
+        .suggestions-list {
+            position: absolute;
+            top: calc(100% + 2px);
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #d1d9e6;
+            border-radius: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .suggestions-list.show {
+            display: block;
+        }
+        .suggestions-list .suggestion-item {
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 12px;
+            transition: 0.15s;
+        }
+        .suggestions-list .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .suggestions-list .suggestion-item:hover {
+            background: #f1f5f9;
+        }
+        .suggestions-list .suggestion-item .suggestion-name {
+            font-weight: 500;
+            color: #0f172a;
+        }
+        .suggestions-list .suggestion-item .suggestion-qty {
+            color: #64748b;
+            font-size: 11px;
+            background: #f1f5f9;
+            padding: 1px 10px;
+            border-radius: 20px;
+        }
+        .suggestions-list .suggestion-item .suggestion-qty.available {
+            color: #059669;
+            background: #d1fae5;
+        }
+        .suggestions-list .suggestion-item .suggestion-qty.low {
+            color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .exists-warning {
+            color: #dc2626;
+            font-size: 10px;
+            margin-right: 4px;
+            display: none;
+            white-space: nowrap;
+        }
+        .exists-warning.show {
+            display: inline;
         }
 
         .footer-text {
@@ -332,14 +455,9 @@
             padding-top: 14px;
             border-top: 1px solid #e9edf2;
         }
-
-        /* زر إعادة المحاولة */
-        .retry-btn {
-            background: #f59e0b;
-            color: white;
-            border-color: #f59e0b;
+        .footer-text .heart {
+            color: #ef4444;
         }
-        .retry-btn:hover:not(:disabled) { background: #d97706; }
 
         @media (max-width: 600px) {
             .container { padding: 12px; }
@@ -362,19 +480,53 @@
                 font-size: 12px;
                 height: 36px;
             }
+            .header .title-group h1 {
+                font-size: 20px;
+            }
+            .header .title-group h1 .foodie {
+                font-size: 22px;
+            }
+            .header .logo {
+                width: 70px;
+                height: 70px;
+            }
+            .header .logo-placeholder {
+                width: 70px;
+                height: 70px;
+                font-size: 34px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container" id="app">
-    <h1>📦 نظام المخازن</h1>
+    <!-- ===== الهيدر ===== -->
+    <div class="header">
+        <img class="logo" 
+             src="https://h.top4top.io/p_3829zl6ne1.jpeg" 
+             alt="Foodie Logo"
+             @error="showLogoPlaceholder = true"
+             v-if="!showLogoPlaceholder">
+        <div class="logo-placeholder" v-else>
+            🍽️
+        </div>
+        
+        <div class="title-group">
+            <h1>
+                نظام إدارة مخازن
+                <span class="foodie">Foodie</span>
+            </h1>
+            <span class="sub-title"> امين المخزن ابو غيث </span>
+        </div>
+    </div>
+
     <div class="subhead">
-        🔗 Google Sheets
+جودة الاتصال بقاعدة البيانات
         <span class="status-badge" :class="statusClass">
             {{ statusText }}
         </span>
-        <button v-if="apiStatus === 'offline'" class="btn retry-btn btn-sm" @click="loadItems" style="margin-right:10px;">
+        <button v-if="apiStatus === 'offline'" class="btn btn-warning btn-sm" @click="loadItems" style="margin-right:10px;">
             🔄 إعادة محاولة
         </button>
     </div>
@@ -417,9 +569,6 @@
         <button class="btn btn-warning" @click="loadItems" style="margin-top:10px; background:#f59e0b; color:white; border-color:#f59e0b;">
             🔄 إعادة المحاولة
         </button>
-        <p style="color:#94a3b8; font-size:11px; margin-top:10px;">
-            رابط السكربت: <span style="direction:ltr; display:inline-block; font-size:10px; word-break:break-all;">{{ apiUrl }}</span>
-        </p>
     </div>
 
     <template v-else>
@@ -485,9 +634,28 @@
             <div class="multi-fields">
                 <div v-for="i in 10" :key="'add_' + i" class="field-item">
                     <label>{{ i }}.</label>
-                    <input type="text" :placeholder="'مادة ' + i" v-model="addItems[i-1].name">
-                    <input type="text" class="qty-input" placeholder="0.00" v-model="addItems[i-1].quantity" 
+                    <input type="text" 
+                           :placeholder="'مادة ' + i" 
+                           v-model="addItems[i-1].name"
+                           @input="onAddInput(i-1)"
+                           @focus="onAddFocus(i-1)"
+                           @blur="onAddBlur(i-1)"
+                           autocomplete="off">
+                    <input type="text" class="qty-input" placeholder="الكمية" v-model="addItems[i-1].quantity" 
                            @input="validateDecimal($event, 'add', i-1)">
+                    <span class="exists-warning" v-if="addItems[i-1].exists">⚠️ موجودة</span>
+                    <div class="suggestions-list" :id="'addSuggestions_' + i">
+                        <div v-for="suggestion in addItems[i-1].suggestions" 
+                             class="suggestion-item"
+                             @mousedown.prevent="selectAddSuggestion(i-1, suggestion)">
+                            <span class="suggestion-name">{{ suggestion.name }}</span>
+                            <span class="suggestion-qty available">🟢 {{ suggestion.quantity }}</span>
+                        </div>
+                        <div v-if="addItems[i-1].suggestions && addItems[i-1].suggestions.length === 0 && addItems[i-1].name.length > 0" 
+                             class="suggestion-item" style="color:#94a3b8; justify-content:center;">
+                            لا توجد نتائج
+                        </div>
+                    </div>
                 </div>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
@@ -497,7 +665,7 @@
                 <button class="btn btn-outline" @click="clearAddFields">🗑️ مسح الكل</button>
             </div>
             <div style="margin-top: 6px; color: #64748b; font-size: 11px; text-align: center;">
-                ⬅️ أدخل الأسماء والكميات ثم اضغط "إضافة الكل"
+                ⬅️ اكتب اسم المادة وستظهر الكمية المتوفرة إن وجدت
                 <span v-if="selectedSheet !== 'all'">(سيتم الإضافة في: <strong>{{ selectedSheet }}</strong>)</span>
                 <span v-else>(سيتم الإضافة في: <strong>Sheet1</strong>)</span>
             </div>
@@ -512,9 +680,28 @@
             <div class="multi-fields">
                 <div v-for="i in 10" :key="'withdraw_' + i" class="field-item">
                     <label>{{ i }}.</label>
-                    <input type="text" :placeholder="'مادة ' + i" v-model="withdrawItems[i-1].name">
-                    <input type="text" class="qty-input" placeholder="0.00" v-model="withdrawItems[i-1].quantity"
+                    <input type="text" 
+                           :placeholder="'مادة ' + i" 
+                           v-model="withdrawItems[i-1].name"
+                           @input="onWithdrawInput(i-1)"
+                           @focus="onWithdrawFocus(i-1)"
+                           @blur="onWithdrawBlur(i-1)"
+                           autocomplete="off">
+                    <input type="text" class="qty-input" placeholder="الكمية" v-model="withdrawItems[i-1].quantity"
                            @input="validateDecimal($event, 'withdraw', i-1)">
+                    <span class="exists-warning" v-if="withdrawItems[i-1].exists">⚠️ موجودة</span>
+                    <div class="suggestions-list" :id="'withdrawSuggestions_' + i">
+                        <div v-for="suggestion in withdrawItems[i-1].suggestions" 
+                             class="suggestion-item"
+                             @mousedown.prevent="selectWithdrawSuggestion(i-1, suggestion)">
+                            <span class="suggestion-name">{{ suggestion.name }}</span>
+                            <span class="suggestion-qty available">🟢 المتوفر: {{ suggestion.quantity }}</span>
+                        </div>
+                        <div v-if="withdrawItems[i-1].suggestions && withdrawItems[i-1].suggestions.length === 0 && withdrawItems[i-1].name.length > 0" 
+                             class="suggestion-item" style="color:#94a3b8; justify-content:center;">
+                            لا توجد نتائج
+                        </div>
+                    </div>
                 </div>
             </div>
             <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
@@ -524,7 +711,7 @@
                 <button class="btn btn-outline" @click="clearWithdrawFields">🗑️ مسح الكل</button>
             </div>
             <div style="margin-top: 6px; color: #64748b; font-size: 11px; text-align: center;">
-                ⬅️ أدخل الأسماء والكميات ثم اضغط "سحب الكل"
+                ⬅️ اكتب اسم المادة وستظهر الكمية المتوفرة
                 <span v-if="selectedSheet !== 'all'">(من: <strong>{{ selectedSheet }}</strong>)</span>
                 <span v-else>(من: <strong>Sheet1</strong>)</span>
             </div>
@@ -540,7 +727,7 @@
         </div>
 
         <div class="footer-text">
-            تصميم دريد العيثاوي
+            <span class="heart">❤️</span> تمنياتي لكم بالتوفيق والنجاح <span class="heart">❤️</span>
         </div>
     </template>
 </div>
@@ -559,11 +746,26 @@ new Vue({
         apiStatus: 'connecting',
         selectedSheet: 'all',
         lastUpdate: '--',
+        showLogoPlaceholder: false,
         
-        addItems: Array.from({length: 10}, () => ({ name: '', quantity: '0' })),
-        withdrawItems: Array.from({length: 10}, () => ({ name: '', quantity: '0' })),
+        // ✅ حقول الإضافة - quantity فارغ بدلاً من '0'
+        addItems: Array.from({length: 10}, () => ({ 
+            name: '', 
+            quantity: '',
+            suggestions: [],
+            exists: false,
+            selectedSuggestion: null
+        })),
         
-        // ⚠️ ضع رابط السكربت الصحيح هنا
+        // ✅ حقول السحب - quantity فارغ بدلاً من '0'
+        withdrawItems: Array.from({length: 10}, () => ({ 
+            name: '', 
+            quantity: '',
+            suggestions: [],
+            exists: false,
+            selectedSuggestion: null
+        })),
+        
         apiUrl: 'https://script.google.com/macros/s/AKfycbzC6wJkaqcx2oBZKAi9j8QQKh6b4L8YkyZOMpuPrIhXC-rgf7kEr2CYX7q97CNTrjlu/exec'
     },
     computed: {
@@ -599,6 +801,9 @@ new Vue({
             return 'badge-blue';
         },
         
+        // ============================================================
+        // 🔢 التحقق من الأرقام العشرية - مع السماح بالحقل الفارغ
+        // ============================================================
         validateDecimal(event, type, index) {
             let value = event.target.value;
             value = value.replace(/[^0-9.]/g, '');
@@ -609,12 +814,135 @@ new Vue({
             event.target.value = value;
             
             if (type === 'add') {
-                this.addItems[index].quantity = value || '0';
+                this.addItems[index].quantity = value;
             } else {
-                this.withdrawItems[index].quantity = value || '0';
+                this.withdrawItems[index].quantity = value;
             }
         },
         
+        // ============================================================
+        // 🔍 الاقتراحات للإضافة
+        // ============================================================
+        onAddInput(index) {
+            const item = this.addItems[index];
+            const name = item.name.trim();
+            
+            if (name.length === 0) {
+                item.suggestions = [];
+                item.exists = false;
+                this.hideSuggestions('add', index);
+                return;
+            }
+            
+            const searchTerm = name.toLowerCase();
+            const suggestions = this.items
+                .filter(i => i.name.toLowerCase().includes(searchTerm))
+                .slice(0, 8);
+            
+            item.suggestions = suggestions;
+            item.exists = suggestions.some(s => s.name.toLowerCase() === searchTerm);
+            
+            if (suggestions.length > 0) {
+                this.showSuggestions('add', index);
+            } else {
+                this.hideSuggestions('add', index);
+            }
+        },
+        
+        onAddFocus(index) {
+            const item = this.addItems[index];
+            if (item.suggestions && item.suggestions.length > 0) {
+                this.showSuggestions('add', index);
+            }
+        },
+        
+        onAddBlur(index) {
+            setTimeout(() => {
+                this.hideSuggestions('add', index);
+            }, 200);
+        },
+        
+        selectAddSuggestion(index, suggestion) {
+            const item = this.addItems[index];
+            item.name = suggestion.name;
+            item.exists = true;
+            item.selectedSuggestion = suggestion;
+            this.hideSuggestions('add', index);
+            setTimeout(() => {
+                const qtyInput = document.querySelector(`#addSection .field-item:nth-child(${index + 1}) .qty-input`);
+                if (qtyInput) qtyInput.focus();
+            }, 100);
+        },
+        
+        showSuggestions(type, index) {
+            const id = type === 'add' ? `addSuggestions_${index + 1}` : `withdrawSuggestions_${index + 1}`;
+            const el = document.getElementById(id);
+            if (el) el.classList.add('show');
+        },
+        
+        hideSuggestions(type, index) {
+            const id = type === 'add' ? `addSuggestions_${index + 1}` : `withdrawSuggestions_${index + 1}`;
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('show');
+        },
+        
+        // ============================================================
+        // 🔍 الاقتراحات للسحب
+        // ============================================================
+        onWithdrawInput(index) {
+            const item = this.withdrawItems[index];
+            const name = item.name.trim();
+            
+            if (name.length === 0) {
+                item.suggestions = [];
+                item.exists = false;
+                this.hideSuggestions('withdraw', index);
+                return;
+            }
+            
+            const searchTerm = name.toLowerCase();
+            const suggestions = this.items
+                .filter(i => i.name.toLowerCase().includes(searchTerm))
+                .slice(0, 8);
+            
+            item.suggestions = suggestions;
+            item.exists = suggestions.some(s => s.name.toLowerCase() === searchTerm);
+            
+            if (suggestions.length > 0) {
+                this.showSuggestions('withdraw', index);
+            } else {
+                this.hideSuggestions('withdraw', index);
+            }
+        },
+        
+        onWithdrawFocus(index) {
+            const item = this.withdrawItems[index];
+            if (item.suggestions && item.suggestions.length > 0) {
+                this.showSuggestions('withdraw', index);
+            }
+        },
+        
+        onWithdrawBlur(index) {
+            setTimeout(() => {
+                this.hideSuggestions('withdraw', index);
+            }, 200);
+        },
+        
+        selectWithdrawSuggestion(index, suggestion) {
+            const item = this.withdrawItems[index];
+            item.name = suggestion.name;
+            item.exists = true;
+            item.selectedSuggestion = suggestion;
+            this.hideSuggestions('withdraw', index);
+            setTimeout(() => {
+                const qtyInput = document.querySelector(`#withdrawSection .field-item:nth-child(${index + 1}) .qty-input`);
+                if (qtyInput) qtyInput.focus();
+            }, 100);
+        },
+        
+        // ============================================================
+        // 📑 إظهار وإخفاء الأقسام
+        // ============================================================
         closeAllSections() {
             document.querySelectorAll('.section-box').forEach(el => {
                 el.classList.remove('active');
@@ -640,7 +968,7 @@ new Vue({
         },
         
         // ============================================================
-        // 📥 تحميل البيانات مع معالجة أفضل للخطأ
+        // 📥 تحميل البيانات
         // ============================================================
         async loadItems() {
             this.loading = true;
@@ -654,7 +982,6 @@ new Vue({
                 
                 console.log('📡 جاري الاتصال بـ:', url);
                 
-                // مهلة زمنية 15 ثانية
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 15000);
                 
@@ -809,13 +1136,14 @@ new Vue({
         },
         
         // ============================================================
-        // ➕ إضافة مواد متعددة
+        // ➕ إضافة مواد متعددة - مع التعامل مع الحقول الفارغة
         // ============================================================
         async addMultipleItems() {
             const itemsToAdd = this.addItems
                 .filter(item => item.name && item.name.trim())
                 .map(item => {
-                    const qty = parseFloat(String(item.quantity).replace(/[^0-9.]/g, ''));
+                    // التعامل مع الحقل الفارغ كـ 0
+                    const qty = parseFloat(String(item.quantity).replace(/[^0-9.]/g, '')) || 0;
                     return { 
                         name: item.name.trim(), 
                         quantity: isNaN(qty) ? 0 : qty
@@ -868,13 +1196,13 @@ new Vue({
         },
         
         // ============================================================
-        // ➖ سحب مواد متعددة
+        // ➖ سحب مواد متعددة - مع التعامل مع الحقول الفارغة
         // ============================================================
         async withdrawMultipleItems() {
             const itemsToWithdraw = this.withdrawItems
                 .filter(item => item.name && item.name.trim())
                 .map(item => {
-                    const qty = parseFloat(String(item.quantity).replace(/[^0-9.]/g, ''));
+                    const qty = parseFloat(String(item.quantity).replace(/[^0-9.]/g, '')) || 0;
                     return { 
                         name: item.name.trim(), 
                         quantity: isNaN(qty) ? 0 : qty
@@ -951,13 +1279,31 @@ new Vue({
             }
         },
         
+        // ============================================================
+        // 🧹 مسح الحقول
+        // ============================================================
         clearAddFields() {
-            this.addItems = Array.from({length: 10}, () => ({ name: '', quantity: '0' }));
+            this.addItems = Array.from({length: 10}, () => ({ 
+                name: '', 
+                quantity: '',
+                suggestions: [],
+                exists: false,
+                selectedSuggestion: null
+            }));
         },
         clearWithdrawFields() {
-            this.withdrawItems = Array.from({length: 10}, () => ({ name: '', quantity: '0' }));
+            this.withdrawItems = Array.from({length: 10}, () => ({ 
+                name: '', 
+                quantity: '',
+                suggestions: [],
+                exists: false,
+                selectedSuggestion: null
+            }));
         },
         
+        // ============================================================
+        // 🔍 دوال البحث
+        // ============================================================
         searchItems() {
             if (this.searchTerm.trim()) {
                 this.showToast('🔍 تم البحث عن: "' + this.searchTerm + '"', 'success');
@@ -968,6 +1314,9 @@ new Vue({
             this.showToast('🧹 تم إلغاء البحث', 'success');
         },
         
+        // ============================================================
+        // 💾 نسخ احتياطي
+        // ============================================================
         _saveToLocal() {
             try { 
                 localStorage.setItem('inventoryBackup', JSON.stringify(this.items));
@@ -986,6 +1335,9 @@ new Vue({
             } catch (e) {}
         },
         
+        // ============================================================
+        // 💬 إشعارات
+        // ============================================================
         showToast(msg, type = '') {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
