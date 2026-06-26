@@ -84,22 +84,58 @@
             margin-right: auto;
         }
 
-        .action-buttons {
+        .main-buttons {
             display: flex;
             gap: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
             justify-content: center;
         }
-        .action-buttons .btn {
-            min-width: 120px;
-            height: 40px;
-            font-size: 14px;
+        .main-buttons .btn {
+            min-width: 140px;
+            height: 44px;
+            font-size: 15px;
+            font-weight: 700;
         }
-        .btn-management { background: #8b5cf6; color: white; border-color: #8b5cf6; }
-        .btn-management:hover:not(:disabled) { background: #7c3aed; }
-        .btn-search { background: #3b82f6; color: white; border-color: #3b82f6; }
-        .btn-search:hover:not(:disabled) { background: #2563eb; }
+        .btn-search-main { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .btn-search-main:hover:not(:disabled) { background: #2563eb; }
+        .btn-add-main { background: #10b981; color: white; border-color: #10b981; }
+        .btn-add-main:hover:not(:disabled) { background: #059669; }
+        .btn-withdraw-main { background: #ef4444; color: white; border-color: #ef4444; }
+        .btn-withdraw-main:hover:not(:disabled) { background: #dc2626; }
+
+        .section-box {
+            display: none;
+            margin-top: 10px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+        }
+        .section-box.active {
+            display: block;
+        }
+        .section-box .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .section-box .section-header h3 {
+            color: #0f172a;
+            font-size: 16px;
+        }
+        .section-box .section-header .close-section {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: 0.2s;
+        }
+        .section-box .section-header .close-section:hover {
+            color: #ef4444;
+        }
 
         .input-group {
             display: flex;
@@ -152,8 +188,6 @@
         .btn-success:hover:not(:disabled) { background: #059669; }
         .btn-danger { background: #ef4444; color: white; border-color: #ef4444; }
         .btn-danger:hover:not(:disabled) { background: #dc2626; }
-        .btn-warning { background: #f59e0b; color: white; border-color: #f59e0b; }
-        .btn-warning:hover:not(:disabled) { background: #d97706; }
         .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #1e293b; }
         .btn-outline:hover:not(:disabled) { background: #f1f5f9; }
         .btn-sm { padding: 2px 10px; font-size: 11px; height: 28px; }
@@ -253,8 +287,9 @@
             gap: 8px;
             margin: 10px 0;
             padding: 12px;
-            background: #f8fafc;
+            background: white;
             border-radius: 12px;
+            border: 1px solid #e2e8f0;
         }
         .multi-fields .field-item {
             display: flex;
@@ -265,6 +300,7 @@
             font-size: 11px;
             color: #475569;
             min-width: 20px;
+            font-weight: 600;
         }
         .multi-fields .field-item input {
             flex: 1;
@@ -297,114 +333,13 @@
             border-top: 1px solid #e9edf2;
         }
 
-        .password-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+        /* زر إعادة المحاولة */
+        .retry-btn {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
         }
-        .password-overlay.active {
-            display: flex;
-        }
-        .password-box {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-        .password-box h3 {
-            margin-bottom: 10px;
-            color: #0f172a;
-        }
-        .password-box p {
-            color: #64748b;
-            font-size: 13px;
-            margin-bottom: 15px;
-        }
-        .password-box input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid #d1d9e6;
-            border-radius: 12px;
-            font-size: 16px;
-            text-align: center;
-            outline: none;
-            margin-bottom: 15px;
-            direction: ltr;
-        }
-        .password-box input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.10);
-        }
-        .password-box .btn-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        .password-box .btn-group .btn {
-            min-width: 100px;
-            height: 40px;
-            font-size: 14px;
-        }
-        .password-error {
-            color: #dc2626;
-            font-size: 12px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .management-panel {
-            display: none;
-            margin-top: 10px;
-            padding: 16px;
-            background: #f8fafc;
-            border-radius: 16px;
-            border: 2px solid #8b5cf6;
-        }
-        .management-panel.active {
-            display: block;
-        }
-        .management-panel .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .management-panel .panel-header h3 {
-            color: #0f172a;
-            font-size: 16px;
-        }
-        .management-panel .panel-header .close-panel {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #94a3b8;
-            transition: 0.2s;
-        }
-        .management-panel .panel-header .close-panel:hover {
-            color: #ef4444;
-        }
-        .management-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .management-tabs .btn {
-            flex: 1;
-        }
-        .management-tabs .btn.active {
-            box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
-        }
+        .retry-btn:hover:not(:disabled) { background: #d97706; }
 
         @media (max-width: 600px) {
             .container { padding: 12px; }
@@ -422,14 +357,10 @@
             .multi-fields .field-item .qty-input {
                 width: 100%;
             }
-            .password-box { padding: 20px; margin: 10px; }
-            .action-buttons .btn {
+            .main-buttons .btn {
                 min-width: 80px;
                 font-size: 12px;
-                height: 34px;
-            }
-            .management-tabs .btn {
-                font-size: 11px;
+                height: 36px;
             }
         }
     </style>
@@ -443,11 +374,14 @@
         <span class="status-badge" :class="statusClass">
             {{ statusText }}
         </span>
+        <button v-if="apiStatus === 'offline'" class="btn retry-btn btn-sm" @click="loadItems" style="margin-right:10px;">
+            🔄 إعادة محاولة
+        </button>
     </div>
 
     <div class="sheet-selector">
         <label>📂 الورقة:</label>
-        <select v-model="selectedSheet" @change="loadItems">
+        <select v-model="selectedSheet" @change="loadItems" :disabled="loading">
             <option value="all">🌐 جميع الأوراق</option>
             <option value="Sheet1">📋 Sheet1</option>
             <option value="Sheet2">📋 Sheet2</option>
@@ -463,9 +397,10 @@
         <button class="btn btn-outline btn-sm" @click="loadItems" :disabled="loading">🔄 تحديث</button>
     </div>
 
-    <div class="action-buttons">
-        <button class="btn btn-search" @click="showSearch">🔍 بحث</button>
-        <button class="btn btn-management" @click="showManagement">⚙️ إدارة</button>
+    <div class="main-buttons">
+        <button class="btn btn-search-main" @click="showSearch" :disabled="loading">🔍 بحث</button>
+        <button class="btn btn-add-main" @click="showAdd" :disabled="loading || apiStatus === 'offline'">➕ إضافة</button>
+        <button class="btn btn-withdraw-main" @click="showWithdraw" :disabled="loading || apiStatus === 'offline'">➖ سحب</button>
     </div>
 
     <div v-if="loading" class="loading">
@@ -473,8 +408,27 @@
         جاري تحميل البيانات...
     </div>
 
+    <div v-else-if="apiStatus === 'offline'" class="loading" style="background:#fef2f2; border-radius:12px; padding:20px; border:1px solid #fecaca;">
+        <div style="font-size: 30px; margin-bottom: 10px;">📡</div>
+        <h3 style="color:#dc2626;">فشل الاتصال بقاعدة البيانات</h3>
+        <p style="color:#64748b; font-size:13px; margin-top:5px;">
+            تأكد من اتصال الإنترنت، أو أن السكربت منشور بشكل صحيح.
+        </p>
+        <button class="btn btn-warning" @click="loadItems" style="margin-top:10px; background:#f59e0b; color:white; border-color:#f59e0b;">
+            🔄 إعادة المحاولة
+        </button>
+        <p style="color:#94a3b8; font-size:11px; margin-top:10px;">
+            رابط السكربت: <span style="direction:ltr; display:inline-block; font-size:10px; word-break:break-all;">{{ apiUrl }}</span>
+        </p>
+    </div>
+
     <template v-else>
-        <div id="searchSection">
+        <!-- قسم البحث -->
+        <div id="searchSection" class="section-box active">
+            <div class="section-header">
+                <h3>🔍 بحث عن المواد</h3>
+                <button class="close-section" @click="closeAllSections">✕</button>
+            </div>
             <div class="input-group search-input">
                 <label>🔎</label>
                 <input type="text" placeholder="اكتب اسم المادة..." v-model="searchTerm" @keyup.enter="searchItems">
@@ -508,8 +462,8 @@
                                 <span style="font-size:10px; background:#e9edf2; padding:2px 8px; border-radius:12px;">{{ item.sheet || 'غير محدد' }}</span>
                             </td>
                             <td class="action-cell">
-                                <button class="btn btn-outline btn-sm" @click="editItem(item)">✏️ تعديل</button>
-                                <button class="btn btn-danger btn-sm" @click="deleteItem(item)">🗑️ حذف</button>
+                                <button class="btn btn-outline btn-sm" @click="editItem(item)" :disabled="saving">✏️</button>
+                                <button class="btn btn-danger btn-sm" @click="deleteItem(item)" :disabled="saving">🗑️</button>
                             </td>
                         </tr>
                     </tbody>
@@ -522,55 +476,57 @@
             </div>
         </div>
 
-        <div class="management-panel" id="managementPanel">
-            <div class="panel-header">
-                <h3>⚙️ لوحة الإدارة</h3>
-                <button class="close-panel" @click="closeManagement">✕</button>
+        <!-- قسم الإضافة -->
+        <div id="addSection" class="section-box">
+            <div class="section-header">
+                <h3>➕ إضافة 10 مواد دفعة واحدة</h3>
+                <button class="close-section" @click="closeAllSections">✕</button>
             </div>
-            
-            <div class="management-tabs">
-                <button class="btn btn-success" @click="managementTab = 'add'" :class="{'active': managementTab === 'add'}">➕ إضافة</button>
-                <button class="btn btn-danger" @click="managementTab = 'withdraw'" :class="{'active': managementTab === 'withdraw'}">➖ سحب</button>
+            <div class="multi-fields">
+                <div v-for="i in 10" :key="'add_' + i" class="field-item">
+                    <label>{{ i }}.</label>
+                    <input type="text" :placeholder="'مادة ' + i" v-model="addItems[i-1].name">
+                    <input type="text" class="qty-input" placeholder="0.00" v-model="addItems[i-1].quantity" 
+                           @input="validateDecimal($event, 'add', i-1)">
+                </div>
             </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
+                <button class="btn btn-success btn-lg" @click="addMultipleItems" :disabled="saving">
+                    {{ saving ? 'جاري الإضافة...' : '➕ إضافة الكل' }}
+                </button>
+                <button class="btn btn-outline" @click="clearAddFields">🗑️ مسح الكل</button>
+            </div>
+            <div style="margin-top: 6px; color: #64748b; font-size: 11px; text-align: center;">
+                ⬅️ أدخل الأسماء والكميات ثم اضغط "إضافة الكل"
+                <span v-if="selectedSheet !== 'all'">(سيتم الإضافة في: <strong>{{ selectedSheet }}</strong>)</span>
+                <span v-else>(سيتم الإضافة في: <strong>Sheet1</strong>)</span>
+            </div>
+        </div>
 
-            <div v-if="managementTab === 'add'">
-                <div style="font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 8px;">
-                    ➕ إضافة 10 مواد دفعة واحدة
-                </div>
-                <div class="multi-fields">
-                    <div v-for="i in 10" :key="'add_' + i" class="field-item">
-                        <label>{{ i }}.</label>
-                        <input type="text" :placeholder="'مادة ' + i" v-model="addItems[i-1].name">
-                        <input type="text" class="qty-input" placeholder="0.00" v-model="addItems[i-1].quantity" 
-                               @input="validateDecimal($event, 'add', i-1)">
-                    </div>
-                </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
-                    <button class="btn btn-success btn-lg" @click="addMultipleItems" :disabled="saving">
-                        {{ saving ? 'جاري الإضافة...' : '➕ إضافة الكل' }}
-                    </button>
-                    <button class="btn btn-outline" @click="clearAddFields">🗑️ مسح الكل</button>
+        <!-- قسم السحب -->
+        <div id="withdrawSection" class="section-box">
+            <div class="section-header">
+                <h3>➖ سحب 10 مواد دفعة واحدة</h3>
+                <button class="close-section" @click="closeAllSections">✕</button>
+            </div>
+            <div class="multi-fields">
+                <div v-for="i in 10" :key="'withdraw_' + i" class="field-item">
+                    <label>{{ i }}.</label>
+                    <input type="text" :placeholder="'مادة ' + i" v-model="withdrawItems[i-1].name">
+                    <input type="text" class="qty-input" placeholder="0.00" v-model="withdrawItems[i-1].quantity"
+                           @input="validateDecimal($event, 'withdraw', i-1)">
                 </div>
             </div>
-
-            <div v-if="managementTab === 'withdraw'">
-                <div style="font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 8px;">
-                    ➖ سحب 10 مواد دفعة واحدة
-                </div>
-                <div class="multi-fields">
-                    <div v-for="i in 10" :key="'withdraw_' + i" class="field-item">
-                        <label>{{ i }}.</label>
-                        <input type="text" :placeholder="'مادة ' + i" v-model="withdrawItems[i-1].name">
-                        <input type="text" class="qty-input" placeholder="0.00" v-model="withdrawItems[i-1].quantity"
-                               @input="validateDecimal($event, 'withdraw', i-1)">
-                    </div>
-                </div>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
-                    <button class="btn btn-danger btn-lg" @click="withdrawMultipleItems" :disabled="saving">
-                        {{ saving ? 'جاري السحب...' : '➖ سحب الكل' }}
-                    </button>
-                    <button class="btn btn-outline" @click="clearWithdrawFields">🗑️ مسح الكل</button>
-                </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
+                <button class="btn btn-danger btn-lg" @click="withdrawMultipleItems" :disabled="saving">
+                    {{ saving ? 'جاري السحب...' : '➖ سحب الكل' }}
+                </button>
+                <button class="btn btn-outline" @click="clearWithdrawFields">🗑️ مسح الكل</button>
+            </div>
+            <div style="margin-top: 6px; color: #64748b; font-size: 11px; text-align: center;">
+                ⬅️ أدخل الأسماء والكميات ثم اضغط "سحب الكل"
+                <span v-if="selectedSheet !== 'all'">(من: <strong>{{ selectedSheet }}</strong>)</span>
+                <span v-else>(من: <strong>Sheet1</strong>)</span>
             </div>
         </div>
 
@@ -584,24 +540,9 @@
         </div>
 
         <div class="footer-text">
-             تصميم دريد العيثاوي
+            تصميم دريد العيثاوي
         </div>
     </template>
-</div>
-
-<div class="password-overlay" id="passwordOverlay">
-    <div class="password-box">
-        <h3>🔐 تأكيد الأمان</h3>
-        <p>يرجى إدخال كلمة المرور للمتابعة</p>
-        <input type="password" id="passwordInput" placeholder="أدخل كلمة المرور">
-        <div class="btn-group">
-            <button class="btn btn-success" id="confirmPasswordBtn">✅ تأكيد</button>
-            <button class="btn btn-outline" id="cancelPasswordBtn">❌ إلغاء</button>
-        </div>
-        <div class="password-error" id="passwordError">
-            ❌ كلمة المرور غير صحيحة
-        </div>
-    </div>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -622,14 +563,7 @@ new Vue({
         addItems: Array.from({length: 10}, () => ({ name: '', quantity: '0' })),
         withdrawItems: Array.from({length: 10}, () => ({ name: '', quantity: '0' })),
         
-        adminPassword: 'admin',
-        managementPanelOpen: false,
-        managementTab: 'add',
-        
-        // متغير لتخزين العملية المعلقة
-        pendingAction: null,
-        pendingData: null,
-        
+        // ⚠️ ضع رابط السكربت الصحيح هنا
         apiUrl: 'https://script.google.com/macros/s/AKfycbzC6wJkaqcx2oBZKAi9j8QQKh6b4L8YkyZOMpuPrIhXC-rgf7kEr2CYX7q97CNTrjlu/exec'
     },
     computed: {
@@ -657,9 +591,6 @@ new Vue({
         }
     },
     methods: {
-        // ============================================================
-        // 🎨 تلوين الأعداد
-        // ============================================================
         getQuantityClass(quantity) {
             const qty = Number(quantity) || 0;
             if (qty <= 75) return 'badge-red';
@@ -668,9 +599,6 @@ new Vue({
             return 'badge-blue';
         },
         
-        // ============================================================
-        // 🔢 التحقق من الأرقام العشرية
-        // ============================================================
         validateDecimal(event, type, index) {
             let value = event.target.value;
             value = value.replace(/[^0-9.]/g, '');
@@ -687,104 +615,144 @@ new Vue({
             }
         },
         
-        // ============================================================
-        // 🔍 زر البحث
-        // ============================================================
+        closeAllSections() {
+            document.querySelectorAll('.section-box').forEach(el => {
+                el.classList.remove('active');
+            });
+        },
+        
         showSearch() {
-            if (this.managementPanelOpen) {
-                this.closeManagement();
-            }
+            this.closeAllSections();
+            document.getElementById('searchSection').classList.add('active');
             document.getElementById('searchSection').scrollIntoView({ behavior: 'smooth' });
         },
         
-        // ============================================================
-        // ⚙️ زر الإدارة
-        // ============================================================
-        showManagement() {
-            const overlay = document.getElementById('passwordOverlay');
-            overlay.classList.add('active');
-            
-            const input = document.getElementById('passwordInput');
-            input.value = '';
-            input.focus();
-            
-            document.getElementById('passwordError').style.display = 'none';
+        showAdd() {
+            this.closeAllSections();
+            document.getElementById('addSection').classList.add('active');
+            document.getElementById('addSection').scrollIntoView({ behavior: 'smooth' });
+        },
+        
+        showWithdraw() {
+            this.closeAllSections();
+            document.getElementById('withdrawSection').classList.add('active');
+            document.getElementById('withdrawSection').scrollIntoView({ behavior: 'smooth' });
         },
         
         // ============================================================
-        // 🔐 نافذة كلمة المرور الموحدة
+        // 📥 تحميل البيانات مع معالجة أفضل للخطأ
         // ============================================================
-        showPasswordPrompt(action, data) {
-            this.pendingAction = action;
-            this.pendingData = data;
+        async loadItems() {
+            this.loading = true;
+            this.apiStatus = 'connecting';
             
-            const overlay = document.getElementById('passwordOverlay');
-            overlay.classList.add('active');
-            
-            const input = document.getElementById('passwordInput');
-            input.value = '';
-            input.focus();
-            
-            document.getElementById('passwordError').style.display = 'none';
-        },
-        
-        confirmPassword() {
-            const input = document.getElementById('passwordInput');
-            const password = input.value;
-            
-            if (password === this.adminPassword) {
-                document.getElementById('passwordOverlay').classList.remove('active');
-                
-                // تنفيذ العملية المعلقة
-                if (this.pendingAction === 'edit') {
-                    this.executeEditItem(this.pendingData);
-                } else if (this.pendingAction === 'delete') {
-                    this.executeDeleteItem(this.pendingData);
-                } else if (this.pendingAction === 'openManagement') {
-                    this.openManagementPanel();
+            try {
+                let url = this.apiUrl + '?action=getItems';
+                if (this.selectedSheet && this.selectedSheet !== 'all') {
+                    url += '&sheet=' + encodeURIComponent(this.selectedSheet);
                 }
                 
-                this.pendingAction = null;
-                this.pendingData = null;
-            } else {
-                document.getElementById('passwordError').style.display = 'block';
-                input.value = '';
-                input.focus();
+                console.log('📡 جاري الاتصال بـ:', url);
+                
+                // مهلة زمنية 15 ثانية
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 15000);
+                
+                const response = await fetch(url, { 
+                    signal: controller.signal,
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                
+                clearTimeout(timeout);
+                
+                if (!response.ok) {
+                    throw new Error('خطأ في الاستجابة: ' + response.status);
+                }
+                
+                const data = await response.json();
+                console.log('📦 البيانات المستلمة:', data);
+                
+                if (data && data.success && data.items && Array.isArray(data.items)) {
+                    this.items = data.items;
+                    this.apiStatus = 'online';
+                    this.lastUpdate = new Date().toLocaleTimeString('ar-EG');
+                    this.showToast('✅ تم تحميل ' + this.items.length + ' مادة', 'success');
+                    this._saveToLocal();
+                } else {
+                    throw new Error(data?.error || 'بيانات غير صالحة');
+                }
+            } catch (error) {
+                console.error('❌ خطأ في التحميل:', error);
+                this.apiStatus = 'offline';
+                
+                let errorMsg = '❌ فشل الاتصال بقاعدة البيانات';
+                if (error.name === 'AbortError') {
+                    errorMsg = '⏰ انتهت مهلة الاتصال';
+                } else if (error.message) {
+                    errorMsg = '❌ ' + error.message;
+                }
+                this.showToast(errorMsg, 'error');
+                this._loadFromLocal();
+            } finally {
+                this.loading = false;
             }
         },
         
-        cancelPassword() {
-            document.getElementById('passwordOverlay').classList.remove('active');
-            this.pendingAction = null;
-            this.pendingData = null;
-            this.showToast('❌ تم إلغاء العملية', 'error');
-        },
-        
-        openManagementPanel() {
-            this.managementPanelOpen = true;
-            this.managementTab = 'add';
-            document.getElementById('managementPanel').classList.add('active');
-            
-            setTimeout(() => {
-                document.getElementById('managementPanel').scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-            
-            this.showToast('✅ تم فتح لوحة الإدارة', 'success');
-        },
-        
-        closeManagement() {
-            this.managementPanelOpen = false;
-            document.getElementById('managementPanel').classList.remove('active');
+        refreshData() {
+            this.loadItems();
         },
         
         // ============================================================
-        // ✏️ تعديل مادة (مع كلمة المرور)
+        // 📨 إرسال طلب
         // ============================================================
-        editItem(item) {
-            this.showPasswordPrompt('edit', item);
+        async _sendRequest(action, params = {}) {
+            try {
+                let url = this.apiUrl + '?action=' + encodeURIComponent(action);
+                
+                for (const key in params) {
+                    if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+                        url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+                    }
+                }
+                
+                if (this.selectedSheet && this.selectedSheet !== 'all') {
+                    url += '&sheet=' + encodeURIComponent(this.selectedSheet);
+                }
+                
+                console.log('📤 إرسال طلب:', url);
+                
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 10000);
+                
+                const response = await fetch(url, { 
+                    signal: controller.signal,
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                
+                clearTimeout(timeout);
+                
+                if (!response.ok) {
+                    throw new Error('خطأ في الاستجابة: ' + response.status);
+                }
+                
+                const data = await response.json();
+                console.log('📥 استجابة:', data);
+                return data;
+            } catch (error) {
+                console.error('❌ خطأ في الطلب:', error);
+                if (error.name === 'AbortError') {
+                    throw new Error('انتهت مهلة الاتصال');
+                }
+                throw error;
+            }
         },
         
-        async executeEditItem(item) {
+        // ============================================================
+        // ✏️ تعديل مادة
+        // ============================================================
+        async editItem(item) {
             const newName = prompt('✏️ تعديل اسم المادة:', item.name)?.trim() || item.name;
             const newQtyInput = prompt('✏️ تعديل العدد:', item.quantity);
             if (newQtyInput === null) return;
@@ -816,14 +784,11 @@ new Vue({
         },
         
         // ============================================================
-        // 🗑️ حذف مادة (مع كلمة المرور)
+        // 🗑️ حذف مادة
         // ============================================================
-        deleteItem(item) {
+        async deleteItem(item) {
             if (!confirm('⚠️ هل أنت متأكد من حذف "' + item.name + '"؟')) return;
-            this.showPasswordPrompt('delete', item);
-        },
-        
-        async executeDeleteItem(item) {
+            
             this.saving = true;
             try {
                 const data = await this._sendRequest('deleteItem', { 
@@ -840,81 +805,6 @@ new Vue({
                 this.showToast('❌ خطأ: ' + error.message, 'error');
             } finally {
                 this.saving = false;
-            }
-        },
-        
-        // ============================================================
-        // 📥 تحميل البيانات
-        // ============================================================
-        async loadItems() {
-            this.loading = true;
-            this.apiStatus = 'connecting';
-            
-            try {
-                let url = this.apiUrl + '?action=getItems';
-                if (this.selectedSheet && this.selectedSheet !== 'all') {
-                    url += '&sheet=' + encodeURIComponent(this.selectedSheet);
-                }
-                
-                console.log('📡 جاري الاتصال بـ:', url);
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                console.log('📦 البيانات المستلمة:', data);
-                
-                if (data && data.success && data.items && Array.isArray(data.items)) {
-                    this.items = data.items;
-                    this.apiStatus = 'online';
-                    this.lastUpdate = new Date().toLocaleTimeString('ar-EG');
-                    this.showToast('✅ تم تحميل ' + this.items.length + ' مادة', 'success');
-                    this._saveToLocal();
-                } else {
-                    this.apiStatus = 'offline';
-                    this.showToast('❌ فشل تحميل البيانات', 'error');
-                    this._loadFromLocal();
-                }
-            } catch (error) {
-                console.error('❌ خطأ في التحميل:', error);
-                this.apiStatus = 'offline';
-                this.showToast('❌ فشل الاتصال بقاعدة البيانات', 'error');
-                this._loadFromLocal();
-            } finally {
-                this.loading = false;
-            }
-        },
-        
-        refreshData() {
-            this.loadItems();
-        },
-        
-        // ============================================================
-        // 📨 إرسال طلب
-        // ============================================================
-        async _sendRequest(action, params = {}) {
-            try {
-                let url = this.apiUrl + '?action=' + encodeURIComponent(action);
-                
-                for (const key in params) {
-                    if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
-                        url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
-                    }
-                }
-                
-                if (this.selectedSheet && this.selectedSheet !== 'all') {
-                    url += '&sheet=' + encodeURIComponent(this.selectedSheet);
-                }
-                
-                console.log('📤 إرسال طلب:', url);
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                console.log('📥 استجابة:', data);
-                return data;
-            } catch (error) {
-                console.error('❌ خطأ في الطلب:', error);
-                throw error;
             }
         },
         
@@ -938,11 +828,6 @@ new Vue({
                 return;
             }
             
-            // طلب كلمة المرور للإضافة
-            this.showPasswordPrompt('add', itemsToAdd);
-        },
-        
-        async executeAddMultipleItems(itemsToAdd) {
             this.saving = true;
             let successCount = 0;
             let errorCount = 0;
@@ -963,7 +848,7 @@ new Vue({
                     }
                 } catch (error) {
                     errorCount++;
-                    errors.push(item.name + ': خطأ في الاتصال');
+                    errors.push(item.name + ': ' + error.message);
                 }
             }
             
@@ -1002,6 +887,7 @@ new Vue({
                 return;
             }
             
+            // التحقق من الكميات المتوفرة
             let insufficientItems = [];
             for (const item of itemsToWithdraw) {
                 const existing = this.items.find(i => 
@@ -1026,11 +912,6 @@ new Vue({
                 return;
             }
             
-            // طلب كلمة المرور للسحب
-            this.showPasswordPrompt('withdraw', itemsToWithdraw);
-        },
-        
-        async executeWithdrawMultipleItems(itemsToWithdraw) {
             this.saving = true;
             let successCount = 0;
             let errorCount = 0;
@@ -1051,7 +932,7 @@ new Vue({
                     }
                 } catch (error) {
                     errorCount++;
-                    errors.push(item.name + ': خطأ في الاتصال');
+                    errors.push(item.name + ': ' + error.message);
                 }
             }
             
@@ -1070,9 +951,6 @@ new Vue({
             }
         },
         
-        // ============================================================
-        // 🧹 مسح الحقول
-        // ============================================================
         clearAddFields() {
             this.addItems = Array.from({length: 10}, () => ({ name: '', quantity: '0' }));
         },
@@ -1080,9 +958,6 @@ new Vue({
             this.withdrawItems = Array.from({length: 10}, () => ({ name: '', quantity: '0' }));
         },
         
-        // ============================================================
-        // 🔍 دوال البحث
-        // ============================================================
         searchItems() {
             if (this.searchTerm.trim()) {
                 this.showToast('🔍 تم البحث عن: "' + this.searchTerm + '"', 'success');
@@ -1093,9 +968,6 @@ new Vue({
             this.showToast('🧹 تم إلغاء البحث', 'success');
         },
         
-        // ============================================================
-        // 💾 نسخ احتياطي
-        // ============================================================
         _saveToLocal() {
             try { 
                 localStorage.setItem('inventoryBackup', JSON.stringify(this.items));
@@ -1114,9 +986,6 @@ new Vue({
             } catch (e) {}
         },
         
-        // ============================================================
-        // 💬 إشعارات
-        // ============================================================
         showToast(msg, type = '') {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
@@ -1129,27 +998,6 @@ new Vue({
     },
     mounted() {
         this.loadItems();
-        
-        // ربط أزرار كلمة المرور
-        document.getElementById('confirmPasswordBtn').addEventListener('click', this.confirmPassword.bind(this));
-        document.getElementById('cancelPasswordBtn').addEventListener('click', this.cancelPassword.bind(this));
-        
-        // ربط Enter في حقل كلمة المرور
-        document.getElementById('passwordInput').addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') {
-                this.confirmPassword();
-            }
-        });
-        
-        // إغلاق نافذة كلمة المرور عند الضغط خارجها
-        document.getElementById('passwordOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('active');
-                // إلغاء العملية المعلقة
-                this.pendingAction = null;
-                this.pendingData = null;
-            }
-        });
     }
 });
 </script>
