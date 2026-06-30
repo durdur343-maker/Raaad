@@ -16,7 +16,7 @@
             padding: 12px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             width: 100%;
             background: white;
             padding: 16px 18px 22px;
@@ -328,12 +328,13 @@
             color: #0f172a;
         }
 
+        /* ===== حقول الإضافة والسحب - حجم مناسب ===== */
         .multi-fields {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 6px;
             margin: 10px 0;
-            padding: 12px;
+            padding: 10px;
             background: white;
             border-radius: 12px;
             border: 1px solid #e2e8f0;
@@ -342,109 +343,50 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            position: relative;
+            padding: 1px 0;
         }
         .multi-fields .field-item label {
-            font-size: 11px;
-            color: #475569;
-            min-width: 20px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f172a;
+            min-width: 22px;
+            text-align: center;
         }
         .multi-fields .field-item input[type="text"] {
             flex: 1;
+            min-width: 0;
             padding: 4px 8px;
             border: 1px solid #d1d9e6;
-            border-radius: 20px;
-            font-size: 11px;
-            height: 28px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 700;
+            height: 30px;
             outline: none;
+            background: #fafcff;
+            transition: 0.2s;
+            color: #0f172a;
         }
         .multi-fields .field-item input[type="text"]:focus {
             border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59,130,246,0.10);
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.12);
+            background: white;
         }
         .multi-fields .field-item .qty-input {
-            width: 70px;
-            min-width: 60px;
+            width: 65px;
+            min-width: 55px;
+            max-width: 75px;
             text-align: center;
-            padding: 4px 8px;
-            border: 1px solid #d1d9e6;
-            border-radius: 20px;
-            font-size: 11px;
-            height: 28px;
-            outline: none;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            background: #f8fafc;
+            padding: 4px 4px;
         }
         .multi-fields .field-item .qty-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59,130,246,0.10);
-        }
-        .multi-fields .field-item .qty-input::placeholder {
-            color: #94a3b8;
-            font-size: 10px;
-        }
-
-        .suggestions-list {
-            position: absolute;
-            top: calc(100% + 2px);
-            left: 0;
-            right: 0;
             background: white;
-            border: 1px solid #d1d9e6;
-            border-radius: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            display: none;
         }
-        .suggestions-list.show {
-            display: block;
-        }
-        .suggestions-list .suggestion-item {
-            padding: 6px 12px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 12px;
-            transition: 0.15s;
-        }
-        .suggestions-list .suggestion-item:last-child {
-            border-bottom: none;
-        }
-        .suggestions-list .suggestion-item:hover {
-            background: #f1f5f9;
-        }
-        .suggestions-list .suggestion-item .suggestion-name {
-            font-weight: 500;
-            color: #0f172a;
-        }
-        .suggestions-list .suggestion-item .suggestion-qty {
-            color: #64748b;
-            font-size: 11px;
-            background: #f1f5f9;
-            padding: 1px 10px;
-            border-radius: 20px;
-        }
-        .suggestions-list .suggestion-item .suggestion-qty.available {
-            color: #059669;
-            background: #d1fae5;
-        }
-        .suggestions-list .suggestion-item .suggestion-qty.low {
-            color: #dc2626;
-            background: #fee2e2;
-        }
-
-        .exists-warning {
-            color: #dc2626;
-            font-size: 10px;
-            margin-right: 4px;
-            display: none;
-            white-space: nowrap;
-        }
-        .exists-warning.show {
-            display: inline;
+        /* حقل المادة - ياخذ المساحة المتبقية */
+        .multi-fields .field-item .name-input {
+            min-width: 60px;
         }
 
         .footer-text {
@@ -459,6 +401,16 @@
             color: #ef4444;
         }
 
+        @media (max-width: 700px) {
+            .multi-fields {
+                grid-template-columns: 1fr;
+            }
+            .multi-fields .field-item .qty-input {
+                width: 70px;
+                min-width: 60px;
+                max-width: 80px;
+            }
+        }
         @media (max-width: 600px) {
             .container { padding: 12px; }
             .input-group { flex-direction: column; align-items: stretch; }
@@ -473,7 +425,8 @@
                 grid-template-columns: 1fr;
             }
             .multi-fields .field-item .qty-input {
-                width: 100%;
+                width: 70px;
+                min-width: 60px;
             }
             .main-buttons .btn {
                 min-width: 80px;
@@ -501,34 +454,23 @@
 <body>
 
 <div class="container" id="app">
-    <!-- ===== الهيدر ===== -->
     <div class="header">
         <img class="logo" 
              src="https://h.top4top.io/p_3829zl6ne1.jpeg" 
              alt="Foodie Logo"
              @error="showLogoPlaceholder = true"
              v-if="!showLogoPlaceholder">
-        <div class="logo-placeholder" v-else>
-            🍽️
-        </div>
-        
+        <div class="logo-placeholder" v-else>🍽️</div>
         <div class="title-group">
-            <h1>
-                نظام إدارة مخازن
-                <span class="foodie">Foodie</span>
-            </h1>
-            <span class="sub-title"> امين المخزن ابو غيث </span>
+            <h1>نظام إدارة مخازن <span class="foodie">Foodie</span></h1>
+            <span class="sub-title">مدير المخزن ابو غيث</span>
         </div>
     </div>
 
     <div class="subhead">
-جودة الاتصال بقاعدة البيانات
-        <span class="status-badge" :class="statusClass">
-            {{ statusText }}
-        </span>
-        <button v-if="apiStatus === 'offline'" class="btn btn-warning btn-sm" @click="loadItems" style="margin-right:10px;">
-            🔄 إعادة محاولة
-        </button>
+        🔗 Google Sheets
+        <span class="status-badge" :class="statusClass">{{ statusText }}</span>
+        <button v-if="apiStatus === 'offline'" class="btn btn-warning btn-sm" @click="loadItems" style="margin-right:10px;">🔄 إعادة محاولة</button>
     </div>
 
     <div class="sheet-selector">
@@ -540,12 +482,8 @@
             <option value="Sheet3">📋 Sheet3</option>
             <option value="Sheet4">📋 Sheet4</option>
         </select>
-        <span class="sheet-info" v-if="selectedSheet !== 'all'">
-            عرض بيانات: <strong>{{ selectedSheet }}</strong>
-        </span>
-        <span class="sheet-info" v-else>
-            عرض: <strong>جميع الأوراق</strong>
-        </span>
+        <span class="sheet-info" v-if="selectedSheet !== 'all'">عرض بيانات: <strong>{{ selectedSheet }}</strong></span>
+        <span class="sheet-info" v-else>عرض: <strong>جميع الأوراق</strong></span>
         <button class="btn btn-outline btn-sm" @click="loadItems" :disabled="loading">🔄 تحديث</button>
     </div>
 
@@ -556,19 +494,14 @@
     </div>
 
     <div v-if="loading" class="loading">
-        <div class="spinner"></div>
-        جاري تحميل البيانات...
+        <div class="spinner"></div> جاري تحميل البيانات...
     </div>
 
     <div v-else-if="apiStatus === 'offline'" class="loading" style="background:#fef2f2; border-radius:12px; padding:20px; border:1px solid #fecaca;">
-        <div style="font-size: 30px; margin-bottom: 10px;">📡</div>
+        <div style="font-size:30px; margin-bottom:10px;">📡</div>
         <h3 style="color:#dc2626;">فشل الاتصال بقاعدة البيانات</h3>
-        <p style="color:#64748b; font-size:13px; margin-top:5px;">
-            تأكد من اتصال الإنترنت، أو أن السكربت منشور بشكل صحيح.
-        </p>
-        <button class="btn btn-warning" @click="loadItems" style="margin-top:10px; background:#f59e0b; color:white; border-color:#f59e0b;">
-            🔄 إعادة المحاولة
-        </button>
+        <p style="color:#64748b; font-size:13px; margin-top:5px;">تأكد من اتصال الإنترنت، أو أن السكربت منشور بشكل صحيح.</p>
+        <button class="btn btn-warning" @click="loadItems" style="margin-top:10px; background:#f59e0b; color:white; border-color:#f59e0b;">🔄 إعادة المحاولة</button>
     </div>
 
     <template v-else>
@@ -618,100 +551,62 @@
                     </tbody>
                 </table>
             </div>
-            <div class="stat-box" style="margin-top: 10px;">
+            <div class="stat-box" style="margin-top:10px;">
                 <span>المواد: <strong>{{ filteredItems.length }}</strong></span>
                 <span>الوحدات: <strong>{{ totalUnits.toFixed(2) }}</strong></span>
                 <span v-if="selectedSheet !== 'all'">الورقة: <strong>{{ selectedSheet }}</strong></span>
             </div>
         </div>
 
-        <!-- قسم الإضافة -->
+        <!-- ===== قسم الإضافة - 16 حقلاً ===== -->
         <div id="addSection" class="section-box">
             <div class="section-header">
-                <h3>➕ إضافة 10 مواد دفعة واحدة</h3>
+                <h3>➕ إضافة 16 مادة دفعة واحدة</h3>
                 <button class="close-section" @click="closeAllSections">✕</button>
             </div>
             <div class="multi-fields">
-                <div v-for="i in 10" :key="'add_' + i" class="field-item">
+                <div v-for="i in 16" :key="'add_' + i" class="field-item">
                     <label>{{ i }}.</label>
-                    <input type="text" 
-                           :placeholder="'مادة ' + i" 
-                           v-model="addItems[i-1].name"
-                           @input="onAddInput(i-1)"
-                           @focus="onAddFocus(i-1)"
-                           @blur="onAddBlur(i-1)"
-                           autocomplete="off">
+                    <input type="text" class="name-input" :placeholder="'مادة ' + i" v-model="addItems[i-1].name">
                     <input type="text" class="qty-input" placeholder="الكمية" v-model="addItems[i-1].quantity" 
                            @input="validateDecimal($event, 'add', i-1)">
-                    <span class="exists-warning" v-if="addItems[i-1].exists">⚠️ موجودة</span>
-                    <div class="suggestions-list" :id="'addSuggestions_' + i">
-                        <div v-for="suggestion in addItems[i-1].suggestions" 
-                             class="suggestion-item"
-                             @mousedown.prevent="selectAddSuggestion(i-1, suggestion)">
-                            <span class="suggestion-name">{{ suggestion.name }}</span>
-                            <span class="suggestion-qty available">🟢 {{ suggestion.quantity }}</span>
-                        </div>
-                        <div v-if="addItems[i-1].suggestions && addItems[i-1].suggestions.length === 0 && addItems[i-1].name.length > 0" 
-                             class="suggestion-item" style="color:#94a3b8; justify-content:center;">
-                            لا توجد نتائج
-                        </div>
-                    </div>
                 </div>
             </div>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
+            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:6px;">
                 <button class="btn btn-success btn-lg" @click="addMultipleItems" :disabled="saving">
                     {{ saving ? 'جاري الإضافة...' : '➕ إضافة الكل' }}
                 </button>
                 <button class="btn btn-outline" @click="clearAddFields">🗑️ مسح الكل</button>
             </div>
-            <div style="margin-top: 6px; color: #64748b; font-size: 11px; text-align: center;">
-                ⬅️ اكتب اسم المادة وستظهر الكمية المتوفرة إن وجدت
+            <div style="margin-top:6px; color:#64748b; font-size:11px; text-align:center;">
+                ⬅️ أدخل الأسماء والكميات ثم اضغط "إضافة الكل"
                 <span v-if="selectedSheet !== 'all'">(سيتم الإضافة في: <strong>{{ selectedSheet }}</strong>)</span>
                 <span v-else>(سيتم الإضافة في: <strong>Sheet1</strong>)</span>
             </div>
         </div>
 
-        <!-- قسم السحب -->
+        <!-- ===== قسم السحب - 16 حقلاً ===== -->
         <div id="withdrawSection" class="section-box">
             <div class="section-header">
-                <h3>➖ سحب 10 مواد دفعة واحدة</h3>
+                <h3>➖ سحب 16 مادة دفعة واحدة</h3>
                 <button class="close-section" @click="closeAllSections">✕</button>
             </div>
             <div class="multi-fields">
-                <div v-for="i in 10" :key="'withdraw_' + i" class="field-item">
+                <div v-for="i in 16" :key="'withdraw_' + i" class="field-item">
                     <label>{{ i }}.</label>
-                    <input type="text" 
-                           :placeholder="'مادة ' + i" 
-                           v-model="withdrawItems[i-1].name"
-                           @input="onWithdrawInput(i-1)"
-                           @focus="onWithdrawFocus(i-1)"
-                           @blur="onWithdrawBlur(i-1)"
-                           autocomplete="off">
+                    <input type="text" class="name-input" :placeholder="'مادة ' + i" v-model="withdrawItems[i-1].name">
                     <input type="text" class="qty-input" placeholder="الكمية" v-model="withdrawItems[i-1].quantity"
                            @input="validateDecimal($event, 'withdraw', i-1)">
-                    <span class="exists-warning" v-if="withdrawItems[i-1].exists">⚠️ موجودة</span>
-                    <div class="suggestions-list" :id="'withdrawSuggestions_' + i">
-                        <div v-for="suggestion in withdrawItems[i-1].suggestions" 
-                             class="suggestion-item"
-                             @mousedown.prevent="selectWithdrawSuggestion(i-1, suggestion)">
-                            <span class="suggestion-name">{{ suggestion.name }}</span>
-                            <span class="suggestion-qty available">🟢 المتوفر: {{ suggestion.quantity }}</span>
-                        </div>
-                        <div v-if="withdrawItems[i-1].suggestions && withdrawItems[i-1].suggestions.length === 0 && withdrawItems[i-1].name.length > 0" 
-                             class="suggestion-item" style="color:#94a3b8; justify-content:center;">
-                            لا توجد نتائج
-                        </div>
-                    </div>
                 </div>
             </div>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
+            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:6px;">
                 <button class="btn btn-danger btn-lg" @click="withdrawMultipleItems" :disabled="saving">
                     {{ saving ? 'جاري السحب...' : '➖ سحب الكل' }}
                 </button>
                 <button class="btn btn-outline" @click="clearWithdrawFields">🗑️ مسح الكل</button>
             </div>
-            <div style="margin-top: 6px; color: #64748b; font-size: 11px; text-align: center;">
-                ⬅️ اكتب اسم المادة وستظهر الكمية المتوفرة
+            <div style="margin-top:6px; color:#64748b; font-size:11px; text-align:center;">
+                ⬅️ أدخل الأسماء والكميات ثم اضغط "سحب الكل"
                 <span v-if="selectedSheet !== 'all'">(من: <strong>{{ selectedSheet }}</strong>)</span>
                 <span v-else>(من: <strong>Sheet1</strong>)</span>
             </div>
@@ -721,9 +616,7 @@
             <div class="left-actions">
                 <button class="btn btn-outline" @click="refreshData" :disabled="loading">🔄 تحديث</button>
             </div>
-            <div style="font-size: 11px; color: #94a3b8;">
-                آخر تحديث: {{ lastUpdate }}
-            </div>
+            <div style="font-size:11px; color:#94a3b8;">آخر تحديث: {{ lastUpdate }}</div>
         </div>
 
         <div class="footer-text">
@@ -748,23 +641,8 @@ new Vue({
         lastUpdate: '--',
         showLogoPlaceholder: false,
         
-        // ✅ حقول الإضافة - quantity فارغ بدلاً من '0'
-        addItems: Array.from({length: 10}, () => ({ 
-            name: '', 
-            quantity: '',
-            suggestions: [],
-            exists: false,
-            selectedSuggestion: null
-        })),
-        
-        // ✅ حقول السحب - quantity فارغ بدلاً من '0'
-        withdrawItems: Array.from({length: 10}, () => ({ 
-            name: '', 
-            quantity: '',
-            suggestions: [],
-            exists: false,
-            selectedSuggestion: null
-        })),
+        addItems: Array.from({length: 16}, () => ({ name: '', quantity: '' })),
+        withdrawItems: Array.from({length: 16}, () => ({ name: '', quantity: '' })),
         
         apiUrl: 'https://script.google.com/macros/s/AKfycbzC6wJkaqcx2oBZKAi9j8QQKh6b4L8YkyZOMpuPrIhXC-rgf7kEr2CYX7q97CNTrjlu/exec'
     },
@@ -801,9 +679,6 @@ new Vue({
             return 'badge-blue';
         },
         
-        // ============================================================
-        // 🔢 التحقق من الأرقام العشرية - مع السماح بالحقل الفارغ
-        // ============================================================
         validateDecimal(event, type, index) {
             let value = event.target.value;
             value = value.replace(/[^0-9.]/g, '');
@@ -820,129 +695,6 @@ new Vue({
             }
         },
         
-        // ============================================================
-        // 🔍 الاقتراحات للإضافة
-        // ============================================================
-        onAddInput(index) {
-            const item = this.addItems[index];
-            const name = item.name.trim();
-            
-            if (name.length === 0) {
-                item.suggestions = [];
-                item.exists = false;
-                this.hideSuggestions('add', index);
-                return;
-            }
-            
-            const searchTerm = name.toLowerCase();
-            const suggestions = this.items
-                .filter(i => i.name.toLowerCase().includes(searchTerm))
-                .slice(0, 8);
-            
-            item.suggestions = suggestions;
-            item.exists = suggestions.some(s => s.name.toLowerCase() === searchTerm);
-            
-            if (suggestions.length > 0) {
-                this.showSuggestions('add', index);
-            } else {
-                this.hideSuggestions('add', index);
-            }
-        },
-        
-        onAddFocus(index) {
-            const item = this.addItems[index];
-            if (item.suggestions && item.suggestions.length > 0) {
-                this.showSuggestions('add', index);
-            }
-        },
-        
-        onAddBlur(index) {
-            setTimeout(() => {
-                this.hideSuggestions('add', index);
-            }, 200);
-        },
-        
-        selectAddSuggestion(index, suggestion) {
-            const item = this.addItems[index];
-            item.name = suggestion.name;
-            item.exists = true;
-            item.selectedSuggestion = suggestion;
-            this.hideSuggestions('add', index);
-            setTimeout(() => {
-                const qtyInput = document.querySelector(`#addSection .field-item:nth-child(${index + 1}) .qty-input`);
-                if (qtyInput) qtyInput.focus();
-            }, 100);
-        },
-        
-        showSuggestions(type, index) {
-            const id = type === 'add' ? `addSuggestions_${index + 1}` : `withdrawSuggestions_${index + 1}`;
-            const el = document.getElementById(id);
-            if (el) el.classList.add('show');
-        },
-        
-        hideSuggestions(type, index) {
-            const id = type === 'add' ? `addSuggestions_${index + 1}` : `withdrawSuggestions_${index + 1}`;
-            const el = document.getElementById(id);
-            if (el) el.classList.remove('show');
-        },
-        
-        // ============================================================
-        // 🔍 الاقتراحات للسحب
-        // ============================================================
-        onWithdrawInput(index) {
-            const item = this.withdrawItems[index];
-            const name = item.name.trim();
-            
-            if (name.length === 0) {
-                item.suggestions = [];
-                item.exists = false;
-                this.hideSuggestions('withdraw', index);
-                return;
-            }
-            
-            const searchTerm = name.toLowerCase();
-            const suggestions = this.items
-                .filter(i => i.name.toLowerCase().includes(searchTerm))
-                .slice(0, 8);
-            
-            item.suggestions = suggestions;
-            item.exists = suggestions.some(s => s.name.toLowerCase() === searchTerm);
-            
-            if (suggestions.length > 0) {
-                this.showSuggestions('withdraw', index);
-            } else {
-                this.hideSuggestions('withdraw', index);
-            }
-        },
-        
-        onWithdrawFocus(index) {
-            const item = this.withdrawItems[index];
-            if (item.suggestions && item.suggestions.length > 0) {
-                this.showSuggestions('withdraw', index);
-            }
-        },
-        
-        onWithdrawBlur(index) {
-            setTimeout(() => {
-                this.hideSuggestions('withdraw', index);
-            }, 200);
-        },
-        
-        selectWithdrawSuggestion(index, suggestion) {
-            const item = this.withdrawItems[index];
-            item.name = suggestion.name;
-            item.exists = true;
-            item.selectedSuggestion = suggestion;
-            this.hideSuggestions('withdraw', index);
-            setTimeout(() => {
-                const qtyInput = document.querySelector(`#withdrawSection .field-item:nth-child(${index + 1}) .qty-input`);
-                if (qtyInput) qtyInput.focus();
-            }, 100);
-        },
-        
-        // ============================================================
-        // 📑 إظهار وإخفاء الأقسام
-        // ============================================================
         closeAllSections() {
             document.querySelectorAll('.section-box').forEach(el => {
                 el.classList.remove('active');
@@ -967,9 +719,6 @@ new Vue({
             document.getElementById('withdrawSection').scrollIntoView({ behavior: 'smooth' });
         },
         
-        // ============================================================
-        // 📥 تحميل البيانات
-        // ============================================================
         async loadItems() {
             this.loading = true;
             this.apiStatus = 'connecting';
@@ -979,8 +728,6 @@ new Vue({
                 if (this.selectedSheet && this.selectedSheet !== 'all') {
                     url += '&sheet=' + encodeURIComponent(this.selectedSheet);
                 }
-                
-                console.log('📡 جاري الاتصال بـ:', url);
                 
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 15000);
@@ -998,7 +745,6 @@ new Vue({
                 }
                 
                 const data = await response.json();
-                console.log('📦 البيانات المستلمة:', data);
                 
                 if (data && data.success && data.items && Array.isArray(data.items)) {
                     this.items = data.items;
@@ -1030,9 +776,6 @@ new Vue({
             this.loadItems();
         },
         
-        // ============================================================
-        // 📨 إرسال طلب
-        // ============================================================
         async _sendRequest(action, params = {}) {
             try {
                 let url = this.apiUrl + '?action=' + encodeURIComponent(action);
@@ -1046,8 +789,6 @@ new Vue({
                 if (this.selectedSheet && this.selectedSheet !== 'all') {
                     url += '&sheet=' + encodeURIComponent(this.selectedSheet);
                 }
-                
-                console.log('📤 إرسال طلب:', url);
                 
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 10000);
@@ -1065,7 +806,6 @@ new Vue({
                 }
                 
                 const data = await response.json();
-                console.log('📥 استجابة:', data);
                 return data;
             } catch (error) {
                 console.error('❌ خطأ في الطلب:', error);
@@ -1076,9 +816,6 @@ new Vue({
             }
         },
         
-        // ============================================================
-        // ✏️ تعديل مادة
-        // ============================================================
         async editItem(item) {
             const newName = prompt('✏️ تعديل اسم المادة:', item.name)?.trim() || item.name;
             const newQtyInput = prompt('✏️ تعديل العدد:', item.quantity);
@@ -1110,9 +847,6 @@ new Vue({
             }
         },
         
-        // ============================================================
-        // 🗑️ حذف مادة
-        // ============================================================
         async deleteItem(item) {
             if (!confirm('⚠️ هل أنت متأكد من حذف "' + item.name + '"؟')) return;
             
@@ -1135,15 +869,11 @@ new Vue({
             }
         },
         
-        // ============================================================
-        // ➕ إضافة مواد متعددة - مع التعامل مع الحقول الفارغة
-        // ============================================================
         async addMultipleItems() {
             const itemsToAdd = this.addItems
                 .filter(item => item.name && item.name.trim())
                 .map(item => {
-                    // التعامل مع الحقل الفارغ كـ 0
-                    const qty = parseFloat(String(item.quantity).replace(/[^0-9.]/g, '')) || 0;
+                    const qty = parseFloat(String(item.quantity).replace(/[^0-9.]/g, ''));
                     return { 
                         name: item.name.trim(), 
                         quantity: isNaN(qty) ? 0 : qty
@@ -1195,14 +925,11 @@ new Vue({
             }
         },
         
-        // ============================================================
-        // ➖ سحب مواد متعددة - مع التعامل مع الحقول الفارغة
-        // ============================================================
         async withdrawMultipleItems() {
             const itemsToWithdraw = this.withdrawItems
                 .filter(item => item.name && item.name.trim())
                 .map(item => {
-                    const qty = parseFloat(String(item.quantity).replace(/[^0-9.]/g, '')) || 0;
+                    const qty = parseFloat(String(item.quantity).replace(/[^0-9.]/g, ''));
                     return { 
                         name: item.name.trim(), 
                         quantity: isNaN(qty) ? 0 : qty
@@ -1215,7 +942,6 @@ new Vue({
                 return;
             }
             
-            // التحقق من الكميات المتوفرة
             let insufficientItems = [];
             for (const item of itemsToWithdraw) {
                 const existing = this.items.find(i => 
@@ -1279,31 +1005,13 @@ new Vue({
             }
         },
         
-        // ============================================================
-        // 🧹 مسح الحقول
-        // ============================================================
         clearAddFields() {
-            this.addItems = Array.from({length: 10}, () => ({ 
-                name: '', 
-                quantity: '',
-                suggestions: [],
-                exists: false,
-                selectedSuggestion: null
-            }));
+            this.addItems = Array.from({length: 16}, () => ({ name: '', quantity: '' }));
         },
         clearWithdrawFields() {
-            this.withdrawItems = Array.from({length: 10}, () => ({ 
-                name: '', 
-                quantity: '',
-                suggestions: [],
-                exists: false,
-                selectedSuggestion: null
-            }));
+            this.withdrawItems = Array.from({length: 16}, () => ({ name: '', quantity: '' }));
         },
         
-        // ============================================================
-        // 🔍 دوال البحث
-        // ============================================================
         searchItems() {
             if (this.searchTerm.trim()) {
                 this.showToast('🔍 تم البحث عن: "' + this.searchTerm + '"', 'success');
@@ -1314,9 +1022,6 @@ new Vue({
             this.showToast('🧹 تم إلغاء البحث', 'success');
         },
         
-        // ============================================================
-        // 💾 نسخ احتياطي
-        // ============================================================
         _saveToLocal() {
             try { 
                 localStorage.setItem('inventoryBackup', JSON.stringify(this.items));
@@ -1335,9 +1040,6 @@ new Vue({
             } catch (e) {}
         },
         
-        // ============================================================
-        // 💬 إشعارات
-        // ============================================================
         showToast(msg, type = '') {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
